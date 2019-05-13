@@ -40,7 +40,7 @@
                 <span v-if="tx.type=='send'">-{{(tx.amount_debited-tx.amount_credited-tx.fee)/1000000000}}
                   ({{tx.fee/1000000000}})
                 </span>
-                <span v-else>+{{ tx.amount_credited/1000000000 }}</span>k
+                <span v-else>+{{ tx.amount_credited/1000000000 }}</span>
               </p>
               <span v-if="tx.status=='confirmed'" class="tag is-link">{{ $t("msg.confirmed") }}</span>
               <div v-if="tx.status=='unconfirmed'" > 
