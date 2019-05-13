@@ -1,6 +1,6 @@
 const messages = {
   msg: {
-    title: 'Niffler Wallet',
+    title: 'Kepler Wallet',
     password: 'Password',
     passwordAgain: 'Enter password again',
     wrongPassword: 'Wrong password',
@@ -20,12 +20,12 @@ const messages = {
     cancel:'Cancel',
     save: 'Save',
 
-    welcome: 'Welcome to use Niffler wallet',
+    welcome: 'Welcome to use Kepler wallet',
     
     msg: 'Message',
 
     login: {
-      walletExist: 'Found grin wallet data exists; login with original password :-)',
+      walletExist: 'Found kepler wallet data exists; login with original password :-)',
     },
     
     new_:{
@@ -47,7 +47,7 @@ const messages = {
       httpReceive: 'Open http listener to receive',
       height:'Height',
       updateTitle: 'Found new version',
-      updateMsg: 'Found new version of Niffler wallet. Please update Right NOW.',
+      updateMsg: 'Found new version of Kepler wallet. Please update Right NOW.',
       yes: 'yes',
       no: 'no',
       hedwig: 'Receive via Hedwig'
@@ -92,7 +92,7 @@ const messages = {
       success: 'Transcation success',
       TxFailed: 'Send transcation failed',
       salteVersion: 'Slate file version',
-      salteVersionHelp: 'If you failed to send grin, try change the Slate file version then resend'
+      salteVersionHelp: 'If you failed to send kepler, try change the Slate file version then resend'
     },
 
     fileReceive: {
@@ -138,12 +138,12 @@ const messages = {
       tip:'Please keep wallet online.',
       close: 'Stop Hedwig',
       introTitle: 'Introduction',
-      intro1: 'Hedwig(v1) is a relay service for users without a public ip. It provides a temporary address to receive grin.',
-      intro2: 'When someone send grin to the address, Hedwig(v1) will forward the send request to your wallet. So you will get your grin.',
+      intro1: 'Hedwig(v1) is a relay service for users without a public ip. It provides a temporary address to receive kepler.',
+      intro2: 'When someone send kepler to the address, Hedwig(v1) will forward the send request to your wallet. So you will get your kepler.',
       start: 'Start',
       failed: 'Error when try to connect Hedwig server, try it latter maybe',
       failed2: 'Error when test Hedwig address, try it later maybe or restart wallet.',
-      failed3: 'Failed to start local grin receive service, try it later maybe or restart wallet.',
+      failed3: 'Failed to start local kepler receive service, try it later maybe or restart wallet.',
       copy: 'copy address',
       copied: 'address was copied in clipboard'
     }

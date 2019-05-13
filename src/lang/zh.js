@@ -1,6 +1,6 @@
 const messages = {
   msg: {
-    title: 'Niffler 钱包',
+    title: 'Kepler 钱包',
     password: '密码',
     passwordAgain: '再次输入密码',
     wrongPassword: '密码错误',
@@ -19,11 +19,11 @@ const messages = {
 
     cancel:'撤销',
     save: '保存',
-    welcome: '欢迎使用Niffler钱包',
+    welcome: '欢迎使用Kepler钱包',
     msg: '消息',
 
     login: {
-      walletExist: '发现已有Grin钱包存在；请用原有的密码登陆吧 :-)',
+      walletExist: '发现已有Kepler钱包存在；请用原有的密码登陆吧 :-)',
     },
     
     new_:{
@@ -45,7 +45,7 @@ const messages = {
       httpReceive: '开启http端口接收',
       height:'同步高度',
       updateTitle: '发现新版本',
-      updateMsg: '发现Niffer钱包的新版本, 请立刻更新! (下载并覆盖原有程序即可).',
+      updateMsg: '发现Kepler钱包的新版本, 请立刻更新! (下载并覆盖原有程序即可).',
       yes: '好的',
       no: '暂时不更新',
 
@@ -119,12 +119,12 @@ const messages = {
       reachableMsg2: '请确保你的ip地址外网用户能够访问',
       close: '关闭HTTP监听',
       attention: '注意',
-      reachableMsg: '设置HTTP接收Grin: 需要你有对外的公网ip, 并且你的ip能被访问',
+      reachableMsg: '设置HTTP接收Kepler: 需要你有对外的公网ip, 并且你的ip能被访问',
       frp: '如果没有, 可以试试 ngrok 或者 frp的内网穿透方案',
       password: '钱包密码 (用于启动http监听)',
       start: '启动',
       failed: '启动失败，可能是密码错误',
-      failed2: '监听失败，你的对外ip无法被访问到; 请使用交易文件的方法来收发Grin.',
+      failed2: '监听失败，你的对外ip无法被访问到; 请使用交易文件的方法来收发Kepler.',
       failed3: '无法获取你的IP地址，请过段时间再试下',
       ip: '你的公网IP'
     },
@@ -138,11 +138,11 @@ const messages = {
       close: '关闭Hedwig',
       introTitle: '介绍',
       intro1: 'Hedwig(v1) 是一个 为没有公网IP的用户 定制的代理服务，它会提供一个临时的收币地址.',
-      intro2: '当有人向这个临时地址发送grin时，它会把这个发币请求转发到你的Niffler钱包，完成交易.',
+      intro2: '当有人向这个临时地址发送kepler时，它会把这个发币请求转发到你的Kepler钱包，完成交易.',
       start: '启动',
       failed: '连接到hedwig服务器时 发生错误，等下再试吧.',
       failed2: '连接到hedwig临时地址时 发生错误， 重启下钱包 or 等下再试吧.',
-      failed3: '启动本地grin接收服务失败， 重启下钱包 or 等下再试吧.',
+      failed3: '启动本地kepler接收服务失败， 重启下钱包 or 等下再试吧.',
       copy: '复制地址',
       copied: '地址已经复制到剪贴板'
     }

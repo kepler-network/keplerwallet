@@ -1,10 +1,10 @@
 <template>
   <div class="notification is-link" style="width:260px;">
     <p class="subtitle is-5">{{ $t("msg.info.spendable") }}:</p>
-    <p class="title is-2">{{spendable}} ツ</p>
-    <p>{{ $t("msg.info.total") }}: {{total}} ツ</p> 
-    <p>{{ $t("msg.unconfirmed") }}: {{unconfirmed}} ツ</p>
-    <p>{{ $t("msg.locked") }}: {{locked}} ツ</p>
+    <p class="title is-2">{{spendable}} k</p>
+    <p>{{ $t("msg.info.total") }}: {{total}} k</p> 
+    <p>{{ $t("msg.unconfirmed") }}: {{unconfirmed}} k</p>
+    <p>{{ $t("msg.locked") }}: {{locked}} k</p>
   </div>
 </template>
 

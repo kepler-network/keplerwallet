@@ -6,7 +6,7 @@ import axios from 'axios'
 require('promise.prototype.finally').shim();
 
 import log from './logger'
-import {platform, grinPath, seedPath, grinNode, chainType, apiSecretPath, walletTOMLPath} from './config'
+import {platform, keplerPath, seedPath, keplerNode, chainType, apiSecretPath, walletTOMLPath} from './config'
 import { messageBus } from '../renderer/messagebus'
 
 let ownerAPI
@@ -44,7 +44,7 @@ class WalletService {
             client = axios.create({
                 baseURL: wallet_host,
                 auth: {
-                    username: 'grin',
+                    username: 'kepler',
                     password: fs.readFileSync(apiSecretPath).toString()
                 },
             })
@@ -119,10 +119,10 @@ class WalletService {
         enableForeignApi()
 
         if(platform === 'linux'){
-            ownerAPI = execFile(grinPath, ['-r', grinNode, 'owner_api']) 
+            ownerAPI = execFile(keplerPath, ['wallet', '-r', keplerNode, 'owner_api']) 
         }else{
-            const cmd = platform==='win'? `${grinPath} -r ${grinNode} --pass ${password} owner_api`:
-                                        `${grinPath} -r ${grinNode} owner_api`
+            const cmd = platform==='win'? `${keplerPath} wallet -r ${keplerNode} --pass ${password} owner_api`:
+                                        `${keplerPath} wallet -r ${keplerNode} owner_api`
             //log.debug(`platform: ${platform}; start owner api cmd: ${cmd}`)
             ownerAPI =  exec(cmd)
         }
@@ -164,10 +164,10 @@ class WalletService {
     static startListen(password=password_){
         WalletService.stopListen()
         if(platform==='linux'){
-            listenProcess =  execFile(grinPath, ['-e', 'listen']) 
+            listenProcess =  execFile(keplerPath, ['wallet', '-e', 'listen']) 
         }else{
-            const cmd = platform==='win'? `${grinPath} -e --pass ${password} listen`:
-                                        `${grinPath} -e listen`
+            const cmd = platform==='win'? `${keplerPath} wallet -e --pass ${password} listen`:
+                                        `${keplerPath} wallet -e listen`
             //log.debug(`platform: ${platform}; start listen cmd: ${cmd}`)
             listenProcess =  exec(cmd)
         }
@@ -216,9 +216,9 @@ class WalletService {
     }
 
     static new(password){
-        const cmd = platform==='win'? `${grinPath} -r ${grinNode} --pass ${password} init`:
-                                      `${grinPath} -r ${grinNode} init`
-        log.debug(`function new: platform: ${platform}; grin bin: ${grinPath}; grin node: ${grinNode}`); 
+        const cmd = platform==='win'? `${keplerPath} wallet -r ${keplerNode} --pass ${password} init`:
+                                      `${keplerPath} wallet -r ${keplerNode} init`
+        log.debug(`function new: platform: ${platform}; kepler bin: ${keplerPath}; kepler node: ${keplerNode}`); 
         let createProcess = exec(cmd)
         createProcess.stdout.on('data', (data) => {
             var output = data.toString()
@@ -256,13 +256,13 @@ class WalletService {
     }
 
     static send(amount, method, dest, version){
-        const cmd = `${grinPath} -r ${grinNode} -p ${password_} send -m ${method} -d ${dest} -v ${version} ${amount}`
+        const cmd = `${keplerPath} wallet -r ${keplerNode} -p ${password_} send -m ${method} -d ${dest} -v ${version} ${amount}`
         log.debug(cmd)
         return execPromise(cmd)
     }
 
     static finalize(fn){
-        const cmd = `${grinPath} -r ${grinNode} -p ${password_} finalize -i ${fn}`
+        const cmd = `${keplerPath} wallet -r ${keplerNode} -p ${password_} finalize -i ${fn}`
         return execPromise(cmd)
     }
 
