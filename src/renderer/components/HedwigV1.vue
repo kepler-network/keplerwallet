@@ -117,8 +117,8 @@ export default {
         }
         
         if(!this.internetReachable){
-          let args = ['--server', hedwigServer, '--app', hedwigApp, '--port', '3415', 
-            '--subdomain', String(Math.random()).slice(2)]
+          let args = ['--server', hedwigServer, '--app', hedwigApp, '--port', '7415', 
+            '--subdomain', String(Math.random()).slice(8)]
           this.$log.debug('hedwig client at ' + hedwigClient )
           try{
             hedwig = fork(hedwigClient, args)
@@ -202,7 +202,7 @@ export default {
         return
       }
 
-      const url = 'http://127.0.0.1:3415'
+      const url = 'http://127.0.0.1:7415'
       this.$log.debug('Try to test if http listen locally reachable?')
       this.$http.get(url, {timeout: 5000}).catch((error)=>{
         if(error.response){

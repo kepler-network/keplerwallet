@@ -5,7 +5,7 @@
         <div class="columns is-mobile is-centered">
           <div class="column is-6" >
             <!--<img src="../assets/logo.png" style="width:64px" class="is-pulled-left">-->
-            <h2 class="title" style="margin-top: 24px; margin-left:25px;font-size:2rem" >{{ $t("msg.title") }}</h2>
+            <h2 class="title" style="margin-top: 24px; margin-left:2px;font-size:2.2rem" >{{ $t("msg.title") }}</h2>
           </div>
         </div>
 

@@ -15,7 +15,7 @@
           <div class="message-body">
             <p>{{ $t("msg.httpReceive.address") }} :</p>
             <p class="has-text-weight-semibold is-size-4" style="margin-top:15px;margin-bottom:15px"> 
-              &nbsp; &nbsp; http://{{ip}}:3415 </p>
+              &nbsp; &nbsp; http://{{ip}}:7415 </p>
             <p>{{ $t("msg.httpReceive.reachableMsg2") }}</p>
           </div>
         </div>
@@ -143,7 +143,7 @@ export default {
     },
 
     checkRunning(){
-      const url = 'http://localhost:3415'
+      const url = 'http://localhost:7415'
       this.$log.debug('Try to test if http listen locally reachable?')
       this.$http.get(url, {timeout: 4000}).catch((error)=>{
         if(error.response){
@@ -158,7 +158,7 @@ export default {
             }
             return
           }
-          const url2 = `http://${this.ip}:3415`
+          const url2 = `http://${this.ip}:7415`
           this.$log.debug(`Try to test ${url2} ?`)
           this.$http.get(url2, {timeout: 4000}).catch((error)=>{
             if(error.response){

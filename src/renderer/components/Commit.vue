@@ -30,8 +30,8 @@
           <div class="level-left">
             <div>
               <p class="title is-6 is-marginless">
-                <span v-if="ct.status=='Unconfirmed'" >{{ct.commit| truncate(35)}}</span>
-                <!--<a v-else @click="open(`http://grin-fans.org/commit/${ct.commit}`)">{{ct.commit| truncate(35)}}</a>-->
+                <!--<span v-if="ct.status=='Unconfirmed'" >{{ct.commit| truncate(35)}}</span>
+                <a v-else @click="open(`http://grin-fans.org/commit/${ct.commit}`)">{{ct.commit| truncate(35)}}</a>-->
                 {{ct.commit| truncate(35)}}
               </p>
               <small>{{ $t("msg.commit.heightCreated") }}: {{ct.height}} </small>
@@ -40,7 +40,7 @@
           <div class="level-right">
             <div class="has-text-right">
               <p class="title is-6 is-marginless">
-                {{ ct.value/1000000000 }} k
+                {{ ct.value/1000000000 }} ツ
               </p>
               <span v-if="ct.status=='Unspent'" class="tag is-link">{{ $t("msg.commit.unspent") }}</span>
               <span v-if="ct.status=='toUnspent'" class="tag is-warning">({{ct.confirmed_count+'/10'}}) {{ $t("msg.unconfirmed") }} </span>
@@ -142,7 +142,7 @@
       processCommits(cts){
         let nodeHeight = this.nodeHeight
         let cts_processed = cts.map(function(ct){
-          let c = ct['output']
+          let c = ct[0]
           if( c.status === 'Unspent' && nodeHeight>0){
             c.confirmed_count = nodeHeight - c.height + 1
             if(c.confirmed_count < 10){
