@@ -1,6 +1,6 @@
 {
   "name": "keplerwallet",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "xiaojay <xiaojay@gmail.com>",
   "description": "keplerwallet, a kepler gui wallet",
   "license": "apache-2.0",
