@@ -4,7 +4,7 @@
   <div class="modal-background" @click="closeModal"></div>
   <div class="modal-card" style="width:480px">
     <header class="modal-card-head">
-      <p class="modal-card-title is-size-4 has-text-primary  has-text-weight-semibold">{{ $t("msg.receive") }}</p>
+      <p class="modal-card-title is-size-4 has-text-info  has-text-weight-semibold">{{ $t("msg.receive") }}</p>
       <button class="delete" aria-label="close" @click="closeModal"></button>
     </header>
     <section class="modal-card-body" style="height:320px">
@@ -17,7 +17,7 @@
 
       <div class="center" v-show="toDrag" id="filebox" v-bind:class="{'drag-over':isDragOver}"
          @dragover.prevent="isDragOver=true" @dragleave.prevent="isDragOver=false" @drop.prevent="drop">
-        <p class="is-size-5 has-text-primary has-text-weight-semibold">{{ $t("msg.fileReceive.dropMsg") }}</p>
+        <p class="is-size-5 has-text-info has-text-weight-semibold">{{ $t("msg.fileReceive.dropMsg") }}</p>
       </div>
 
     </section>
