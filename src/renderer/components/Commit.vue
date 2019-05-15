@@ -13,11 +13,11 @@
           <form v-on:submit.prevent="search" class="level-item">
             <div class="field has-addons">
               <p class="control">
-                <input class="input is-link is-small" type="text" placeholder="" v-model="keyword" @keyup.enter="search" v-bind:disabled="searched">
+                <input class="input is-info is-small" type="text" placeholder="" v-model="keyword" @keyup.enter="search" v-bind:disabled="searched">
               </p>
               <p class="control">
-                <button class="button is-link is-small is-outlined" @click="search" v-show="!searched">{{ $t("msg.search") }}</button>
-                <button class="button is-link is-small is-outlined" @click="clearup" v-show="searched">{{ $t("msg.clearup") }}</button>
+                <button class="button is-info is-small is-outlined" @click="search" v-show="!searched">{{ $t("msg.search") }}</button>
+                <button class="button is-info is-small is-outlined" @click="clearup" v-show="searched">{{ $t("msg.clearup") }}</button>
               </p>
             </div>
           </form>
@@ -42,11 +42,11 @@
               <p class="title is-6 is-marginless">
                 {{ ct.value/1000000000 }} ツ
               </p>
-              <span v-if="ct.status=='Unspent'" class="tag is-link">{{ $t("msg.commit.unspent") }}</span>
-              <span v-if="ct.status=='toUnspent'" class="tag is-warning">({{ct.confirmed_count+'/10'}}) {{ $t("msg.unconfirmed") }} </span>
-              <span v-if="ct.status=='Unconfirmed'" class="tag is-warning">{{ $t("msg.unconfirmed") }}</span>
-              <span v-if="ct.status=='Locked'" class="tag is-warning">{{ $t("msg.locked") }}</span>
-              <span v-if="ct.status=='Spent'" class="tag is-warning">{{ $t("msg.commit.spent") }}</span>
+              <span v-if="ct.status=='Unspent'" class="tag is-info">{{ $t("msg.commit.unspent") }}</span>
+              <span v-if="ct.status=='toUnspent'" class="tag is-primary">({{ct.confirmed_count+'/10'}}) {{ $t("msg.unconfirmed") }} </span>
+              <span v-if="ct.status=='Unconfirmed'" class="tag is-primary">{{ $t("msg.unconfirmed") }}</span>
+              <span v-if="ct.status=='Locked'" class="tag is-primary">{{ $t("msg.locked") }}</span>
+              <span v-if="ct.status=='Spent'" class="tag is-primary">{{ $t("msg.commit.spent") }}</span>
             </div>
           </div>
         </div>
@@ -60,16 +60,16 @@
         </div>
         <div class="level-right">
 
-        <button v-if="current_page_index>1" class="button is-outlined is-link is-small level-item" @click="prev">
+        <button v-if="current_page_index>1" class="button is-outlined is-info is-small level-item" @click="prev">
           <span class="is-size-7">&lt;</span>
         </button>
         <span class="level-item" style="vertical-align:bottom;">{{current_page_index}}/{{pages_count}}</span>
-        <button v-if="current_page_index<pages_count" class="button is-outlined is-link is-small level-item" @click="next">
+        <button v-if="current_page_index<pages_count" class="button is-outlined is-info is-small level-item" @click="next">
           <span class="is-size-7">&gt;</span>
         </button>
         &nbsp;&nbsp;
-        <input v-model="jump_to" @keyup.enter="jump" class="input is-link is-small level-item" placeholder="2" style="width:30px">
-        <button class="button is-link is-small is-outlined level-item">
+        <input v-model="jump_to" @keyup.enter="jump" class="input is-info is-small level-item" placeholder="2" style="width:30px">
+        <button class="button is-info is-small is-outlined level-item">
           <span class="is-size-7" @click="jump">跳转</span>
         </button>
         </div>
@@ -196,8 +196,8 @@
         let s = (this.current_page_index-1)*this.count_per_page
         this.current_commits = this.total_commits.slice(s, s+this.count_per_page)
       },
-      open (link) {
-        this.$electron.shell.openExternal(link)
+      open (info) {
+        this.$electron.shell.openExternal(info)
       }
     }
   }

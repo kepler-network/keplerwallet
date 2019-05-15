@@ -1,5 +1,5 @@
 <template>
-  <section class="hero is-link is-fullheight">
+  <section class="hero is-fullheight">
     <div class="hero-body">
       <div class="container">
         <div class="columns is-mobile is-centered">
@@ -11,7 +11,7 @@
 
         <div class="columns is-mobile is-centered">
           <div class="column"  v-bind:class="{'is-8': firstTime, 'is-6': !firstTime }">
-            <div class="message is-warning is-small" v-show="firstTime" >
+            <div class="message is-primary is-small" v-show="firstTime" >
               <div class="message-header">
                 <p>{{ $t("msg.welcome") }}</p>
                 <button class="delete" aria-label="delete" @click="firstTime=false"></button>
@@ -25,13 +25,13 @@
                 <label class="label">{{ $t("msg.password") }}</label>
                 <div class="control">
                   <input class="input" type="password" placeholder="********" required
-                      :class="{'is-warning': error}" v-model="password">
+                      :class="{'is-primary': error}" v-model="password">
                   </div>
-                  <p class="help is-warning" v-if="error">{{ $t("msg.wrongPassword") }}</p>
+                  <p class="help is-primary" v-if="error">{{ $t("msg.wrongPassword") }}</p>
                 </div>
             
                 <div class="field">
-                  <button class="button is-link" @click.prevent="tryLogin">
+                  <button class="button is-info" @click.prevent="tryLogin">
                     {{ $t("msg.login_") }}
                   </button>
                 </div>

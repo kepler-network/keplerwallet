@@ -4,12 +4,12 @@
   <div class="modal-background" @click="closeModal"></div>
   <div class="modal-card" style="width:480px">
     <header class="modal-card-head">
-      <p class="modal-card-title is-size-4 has-text-link">{{ $t("msg.receive") }}(HTTP/HTTPS)</p>
+      <p class="modal-card-title is-size-4 has-text-info has-text-weight-semibold">{{ $t("msg.receive") }}(HTTP/HTTPS)</p>
       <button class="delete" aria-label="close" @click="closeModal"></button>
     </header>
-    <section class="modal-card-body" style="height:380px;background-color: whitesmoke;">
+    <section class="modal-card-body" style="height:380px;">
       <div v-if="running">
-        <div class="message is-link">
+        <div class="message is-primary">
           <div class="message-header" v-if="started"><p>{{ $t("msg.httpReceive.launchSucess") }}</p></div>
           <div class="message-header" v-else><p>{{ $t("msg.httpReceive.listening") }}</p></div>
           <div class="message-body">
@@ -19,23 +19,23 @@
             <p>{{ $t("msg.httpReceive.reachableMsg2") }}</p>
           </div>
         </div>
-        <button class="button is-link is-outlined"  @click="closeModal" >ok</button>
+        <button class="button is-primary is-outlined"  @click="closeModal" >ok</button>
         &nbsp;&nbsp;
-        <button class="button is-link is-outlined"  @click="stop" v-show="!started">
+        <button class="button is-primary is-outlined"  @click="stop" v-show="!started">
           {{ $t("msg.httpReceive.close") }}
         </button>
 
       </div>
       <div v-else>
-        <div class="notification is-warning" v-if="errors.length">
+        <div class="notification is-primary" v-if="errors.length">
           <p v-for="error in errors">{{ error }}</p>
         </div>
         <div class="center" v-show="errors.length>0">
-          <a class="button is-link is-outlined" v-if="errors.length" @click="closeModal">OK</a>
+          <a class="button is-primary is-outlined" v-if="errors.length" @click="closeModal">OK</a>
         </div>
 
         <div v-show="errors.length==0">
-          <div class="message is-warning">
+          <div class="message is-primary">
             <div class="message-header"><p>{{ $t("msg.httpReceive.attention") }}</p></div>
             <div class="message-body">
               <p>{{ $t("msg.httpReceive.reachableMsg") }}</p>
@@ -47,14 +47,14 @@
             <label class="label">{{ $t("msg.httpReceive.password") }}</label>
             <div class="control">
               <input class="input" type="password" placeholder="********" required
-                :class="{'is-warning': errors.length>0}" v-model="password">
+                :class="{'is-primary': errors.length>0}" v-model="password">
             </div>
           </div>
           <br/>
 
           <div class="field is-grouped">
             <div class="control">
-              <button class="button is-link" v-bind:class="{'is-loading':starting}" @click="start">
+              <button class="button is-info" v-bind:class="{'is-loading':starting}" @click="start">
                 {{ $t("msg.httpReceive.start") }}
               </button>
             </div>
@@ -109,6 +109,9 @@ export default {
   },
   methods: {
     start(){
+      if(this.password===''){
+        this.errors.push(this.$t('msg.httpReceive.error'))
+      }
       if(this.password!=''&&!this.starting&&!this.running){
         this.starting = true
         this.$log.debug('Is local reachable before start? '+ this.localReachable)
@@ -210,7 +213,7 @@ export default {
     getMyIP2(){
       let getIP = extIP({
           replace: true,
-          services: ['https://ipinfo.io/ip', 'http://ifconfig.io/ip'],
+          services: ['https://ipprimary.io/ip', 'http://ifconfig.io/ip'],
           timeout: 600,
           getIP: 'parallel',
           userAgent: 'Chrome 15.0.874 / Mac OS X 10.8.1'

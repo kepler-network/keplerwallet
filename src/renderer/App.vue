@@ -9,7 +9,7 @@
           <div class="dropdown column is-1" style="margin-left:25px;margin-top: auto;" 
             v-bind:class="{'is-active':isDroppingDown}" >
             <div class="dropdown-trigger" >
-              <button class="button is-link is-outlined" aria-haspopup="true" aria-controls="dropdown-menu"
+              <button class="button is-info is-outlined" aria-haspopup="true" aria-controls="dropdown-menu"
                 @click="isDroppingDown=!isDroppingDown;isDroppingDown2=false">
                 {{ $t("msg.send") }}
               </button>
@@ -35,7 +35,7 @@
           <div class="dropdown column column is-1" style="margin-left:-5px;margin-top:auto;" 
             v-bind:class="{'is-active':isDroppingDown2}" >
             <div class="dropdown-trigger" >
-              <button class="button is-link is-outlined" aria-haspopup="true" aria-controls="dropdown-menu"
+              <button class="button is-info is-outlined" aria-haspopup="true" aria-controls="dropdown-menu"
                 @click="isDroppingDown2=!isDroppingDown2;isDroppingDown=false">
                 {{ $t("msg.receive") }}
               </button>
@@ -53,17 +53,17 @@
           </div>
 
           <div class="column column is-1" style="margin-top: auto; margin-left:25px;">
-            <button class="button is-link is-outlined" @click="openHedwigV1 = true">
+            <button class="button is-info is-outlined" @click="openHedwigV1 = true">
               {{ $t("msg.app.hedwig") }}
             </button>
           </div>
 
           <div class="column is-offset-1 is-2" style="margin-left:80px;">
             <div class="level">
-              <p class="is-size-7 tag is-warning animated" v-bind:class="{headShake: isAnimate}" style="animation-iteration-count:3">
+              <p class="is-size-7 tag is-primary animated" v-bind:class="{headShake: isAnimate}" style="animation-iteration-count:3">
                 {{ $t("msg.app.height") }}:{{height}}</p>
               &nbsp;
-              <a class="button is-small is-link is-outlined" @click.prevent="logout">{{ $t("msg.logout") }}</a>
+              <a class="button is-small is-info is-outlined" @click.prevent="logout">{{ $t("msg.logout") }}</a>
 
             </div>
           </div>

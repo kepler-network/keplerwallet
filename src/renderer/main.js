@@ -3,7 +3,8 @@ import axios from 'axios'
 import VueI18n from 'vue-i18n'
 
 import App from './App'
-import 'bulma/css/bulma.css'
+//import 'bulma/css/bulmaswatch.min.css'
+import 'bulmaswatch/superhero/bulmaswatch.min.css'
 import 'animate.css/animate.css'
 import { remote, ipcRenderer} from 'electron'
 

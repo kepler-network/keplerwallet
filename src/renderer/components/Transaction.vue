@@ -11,12 +11,12 @@
           <form v-on:submit.prevent="search" class="level-item">
             <div class="field has-addons">
               <p class="control">
-                <input class="input is-link is-small" type="text" placeholder="" v-model="keyword" @keyup.enter="search" v-bind:disabled="searched">
+                <input class="input is-info is-small" type="text" placeholder="" v-model="keyword" @keyup.enter="search" v-bind:disabled="searched">
 
               </p>
               <p class="control">
-                <button class="button is-link is-small is-outlined" @click="search" v-show="!searched">{{ $t("msg.search") }}</button>
-                <button class="button is-link is-small is-outlined" @click="clearup" v-show="searched">{{ $t("msg.clearup") }}</button>
+                <button class="button is-info is-small is-outlined" @click="search" v-show="!searched">{{ $t("msg.search") }}</button>
+                <button class="button is-info is-small is-outlined" @click="clearup" v-show="searched">{{ $t("msg.clearup") }}</button>
               </p>
             </div>
           </form>
@@ -42,14 +42,14 @@
                 </span>
                 <span v-else>+{{ tx.amount_credited/1000000000 }}</span>
               </p>
-              <span v-if="tx.status=='confirmed'" class="tag is-link">{{ $t("msg.confirmed") }}</span>
+              <span v-if="tx.status=='confirmed'" class="tag is-info">{{ $t("msg.confirmed") }}</span>
               <div v-if="tx.status=='unconfirmed'" > 
-                <span class="tag is-warning">{{ $t("msg.unconfirmed") }}</span>
-                <button v-if="tx.cancelable" class="button is-small is-link is-outlined" @click="cancel(`${tx.tx_slate_id}`)">
+                <span class="tag is-primary">{{ $t("msg.unconfirmed") }}</span>
+                <button v-if="tx.cancelable" class="button is-small is-info is-outlined" @click="cancel(`${tx.tx_slate_id}`)">
                   {{ $t("msg.cancel") }}
                 </button>
               </div>
-              <span v-if="tx.status=='cancelled'" class="tag is-warning">{{ $t("msg.txs.canceled") }}</span>
+              <span v-if="tx.status=='cancelled'" class="tag is-primary">{{ $t("msg.txs.canceled") }}</span>
             </div>
           </div>
         </div>
@@ -63,16 +63,16 @@
         </div>
         <div class="level-right">
 
-        <button v-if="current_page_index>1" class="button is-outlined is-link is-small level-item" @click="prev">
+        <button v-if="current_page_index>1" class="button is-outlined is-info is-small level-item" @click="prev">
           <span class="is-size-7">&lt;</span>
         </button>
         <span class="level-item" style="vertical-align:bottom;">{{current_page_index}}/{{pages_count}}</span>
-        <button v-if="current_page_index<pages_count" class="button is-outlined is-link is-small level-item" @click="next">
+        <button v-if="current_page_index<pages_count" class="button is-outlined is-info is-small level-item" @click="next">
           <span class="is-size-7">&gt;</span>
         </button>
         &nbsp;&nbsp;
-        <input v-model="jump_to" @keyup.enter="jump" class="input is-link is-small level-item" placeholder="2" style="width:30px">
-        <button class="button is-link is-small is-outlined level-item">
+        <input v-model="jump_to" @keyup.enter="jump" class="input is-info is-small level-item" placeholder="2" style="width:30px">
+        <button class="button is-info is-small is-outlined level-item">
           <span class="is-size-7" @click="jump">{{ $t("msg.jump") }}</span>
         </button>
         </div>
@@ -82,7 +82,7 @@
       <p v-if="current_txs.length == 0 && !searched"> {{ $t("msg.txs.noTx") }}</p>
     </div>
   <message :showMsg="openMsg" v-on:close="openMsg = false" 
-    v-bind:msg=msg v-bind:showTime="5" msgType="link">
+    v-bind:msg=msg v-bind:showTime="5" msgType="info">
   </message>
   </div>
 </template>

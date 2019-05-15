@@ -4,12 +4,12 @@
   <div class="modal-background" @click="closeModal"></div>
   <div class="modal-card" style="width:480px">
     <header class="modal-card-head">
-      <p class="modal-card-title is-size-4 has-text-link">{{ $t("msg.send") }}(HTTP/HTTPS)</p>
+      <p class="modal-card-title is-size-4 has-text-info has-text-weight-semibold">{{ $t("msg.send") }}(HTTP/HTTPS)</p>
       <button class="delete" aria-label="close" @click="closeModal"></button>
     </header>
-    <section class="modal-card-body" style="height:380px;background-color: whitesmoke;">
+    <section class="modal-card-body" style="height:380px">
       
-      <div class="notification is-warning" v-if="errors.length">
+      <div class="notification is-primary" v-if="errors.length">
         <p v-for="error in errors">{{ error }}</p>
       </div>
       <div v-if="!sent">
@@ -45,14 +45,14 @@
         <br/>
         <div class="field is-grouped">
           <div class="control">
-            <button class="button is-link" v-bind:class="{'is-loading':sending}" @click="send">{{ $t("msg.send") }}</button>
+            <button class="button is-info" v-bind:class="{'is-loading':sending}" @click="send">{{ $t("msg.send") }}</button>
           </div>
           <div class="control">
             <button class="button is-text" @click="closeModal">{{ $t("msg.cancel") }}</button>
           </div>
         </div>
       </div>
-      <div v-else class="notification is-link" >
+      <div v-else class="notification is-info" >
         <p>{{ $t("msg.httpSend.success") }}</p>
       </div>
     </section>

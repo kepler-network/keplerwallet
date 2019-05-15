@@ -1,5 +1,5 @@
 <template>
-  <div class="notification is-link" style="width:260px;">
+  <div class="notification is-info" style="width:260px;">
     <p class="subtitle is-5">{{ $t("msg.info.spendable") }}:</p>
     <p class="title is-2">{{spendable}}</p>
     <p>{{ $t("msg.info.total") }}: {{total}}</p> 
