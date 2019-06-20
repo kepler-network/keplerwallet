@@ -152,7 +152,7 @@ export default {
     },
 
     checklocalReachable(){
-      const url = 'http://127.0.0.1:3415'
+      const url = 'http://127.0.0.1:7415'
       this.$log.debug('Try to test if http listen locally reachable?')
       return this.$http.get(url, {timeout: 5000})
     },
@@ -166,7 +166,7 @@ export default {
       this.getIP(this.$log).then((ip)=>{
         this.ip = ip
         this.$log.debug('Get ip: ' + ip)
-        const url = `http://${ip}:3415`
+        const url = `http://${ip}:7415`
         this.$log.debug(`Try to test ${url} ?`)
         this.$http.get(url, {timeout: 4000}).catch((error)=>{
           if(error.response){
