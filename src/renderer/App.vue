@@ -142,7 +142,7 @@
   const {ipcRenderer} = require('electron')
 
   export default {
-    name: 'niffler',
+    name: 'kepler',
     mixins: [mixin],
     components: {
       SummaryInfo,

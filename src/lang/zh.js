@@ -1,6 +1,6 @@
 const messages = {
   msg: {
-    title: 'Niffler 钱包',
+    title: 'Kepler 钱包',
     password: '密码',
     passwordAgain: '再次输入密码',
     wrongPassword: '密码错误',
@@ -19,13 +19,13 @@ const messages = {
 
     cancel:'撤销',
     save: '保存',
-    welcome: '欢迎使用Niffler钱包',
+    welcome: '欢迎使用Kepler钱包',
     msg: '消息',
     more: '更多',
     back: '返回',
 
     login: {
-      walletExist: '发现已有Grin钱包存在；请用原有的密码登陆吧 :-)',
+      walletExist: '发现已有kepler钱包存在；请用原有的密码登陆吧 :-)',
     },
 
     new_:{
@@ -56,7 +56,7 @@ const messages = {
       newPassword: '设置新的密码',
       recover: '恢复钱包',
       reAdd: '重新输入',
-      recovered: '钱包恢复成功, 开始从Grin区块链同步钱包余额；',
+      recovered: '钱包恢复成功, 开始从kepler区块链同步钱包余额；',
       restoring: '预计需要15-30分钟，不要关闭钱包，请耐心等待 ......',
       restored: '钱包恢复成功并且余额同步完成',
       login: '登陆钱包',
@@ -148,14 +148,14 @@ const messages = {
       reachableMsg2: '请确保你的ip地址外网用户能够访问',
       close: '关闭HTTP监听',
       attention: '注意',
-      reachableMsg: '设置HTTP接收Grin: 需要你有对外的公网ip, 并且你的ip能被访问',
+      reachableMsg: '设置HTTP接收kepler: 需要你有对外的公网ip, 并且你的ip能被访问',
       password: '钱包密码 (用于启动http监听)',
       start: '启动',
       error: '没有输入密码.',
       failed: '启动失败，可能是密码错误',
-      failed2: '监听失败，你的对外ip无法被访问到; 请使用交易文件的方法 或者 Hedwig 来收发Grin.',
+      failed2: '监听失败，你的对外ip无法被访问到; 请使用交易文件的方法 或者 Hedwig 来收发kepler.',
       failed3: '无法获取你的IP地址，请过段时间再试下',
-      failed4: '本地HTTP监听(http://127.0.0.1:3415)已经启动。但是你的对外ip无法被访问到; 请使用交易文件的方法 或者 Hedwig 来收发Grin.',
+      failed4: '本地HTTP监听(http://127.0.0.1:3415)已经启动。但是你的对外ip无法被访问到; 请使用交易文件的方法 或者 Hedwig 来收发kepler.',
       ip: '你的公网IP'
     },
 
@@ -168,11 +168,11 @@ const messages = {
       close: '关闭Hedwig',
       introTitle: '介绍',
       intro1: 'Hedwig(v1) 是一个 为没有公网IP的用户 定制的代理服务，它会提供一个临时的收币地址.',
-      intro2: '当有人向这个临时地址发送grin时，它会把这个发币请求转发到你的Niffler钱包，完成交易.',
+      intro2: '当有人向这个临时地址发送kepler时，它会把这个发币请求转发到你的Kepler钱包，完成交易.',
       start: '启动',
       failed: '连接到hedwig服务器时 发生错误，等下再试吧.',
       failed2: '连接到hedwig临时地址时 发生错误， 重启下钱包 or 等下再试吧.',
-      failed3: '启动本地grin接收服务失败， 重启下钱包 or 等下再试吧.',
+      failed3: '启动本地kepler接收服务失败， 重启下钱包 or 等下再试吧.',
       copy: '复制地址',
       copied: '地址已经复制到剪贴板'
     },
@@ -186,8 +186,8 @@ const messages = {
       tip:'完成同步余额可能需要10-30分钟.',
       introTitle: '介绍',
 
-      intro1: '当你的本地钱包余额 和 Grin区块链上的余额不一致(可能是由于交易被取消或者发送失败等原因)时，可以使用 "同步余额" 功能.',
-      intro2: '同步时，在Grin区块链的所有未花费的输出(uxtos)中，找到你可以使用的未花费的输出，相加就得到你的余额.',
+      intro1: '当你的本地钱包余额 和 kepler区块链上的余额不一致(可能是由于交易被取消或者发送失败等原因)时，可以使用 "同步余额" 功能.',
+      intro2: '同步时，在kepler区块链的所有未花费的输出(uxtos)中，找到你可以使用的未花费的输出，相加就得到你的余额.',
       
       start: '开始同步',
       stopCheckMsg: '同步已经取消',

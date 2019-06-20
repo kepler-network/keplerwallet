@@ -27,9 +27,9 @@ log.debug(`Platform:${process.platform}`)
 
 import {exec, execFile, spawn, fork} from 'child_process'
 if(process.platform!=='win32'){
-  exec('pkill grin-wallet')
+  exec('pkill kepler-wallet')
 }else{
-  exec('taskkill -f /im grin-wallet.exe')
+  exec('taskkill -f /im kepler-wallet.exe')
 }
 
 let mainWindow
@@ -45,7 +45,7 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    title: 'Niffler Wallet',
+    title: 'Kepler Wallet',
     center: true,
     height: 500,
     useContentSize: true,
@@ -88,7 +88,7 @@ async function launch(){
       type: 'info',
       title: 'Found new version',
       buttons: ['Yes', 'No'],
-      message: 'Found new version of Niffler wallet, go to download?',
+      message: 'Found new version of kepler wallet, go to download?',
     }, (res, checkboxChecked) => {
       if (res === 0) { 
         shell.openExternal(downloadUrl)

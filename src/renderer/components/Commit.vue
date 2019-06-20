@@ -30,9 +30,7 @@
           <div class="level-left">
             <div>
               <p class="title is-6 is-marginless" @mouseover="(event)=>mouseover(index)" @mouseleave="mouseLeave" >
-                <span v-if="ct.status=='Unconfirmed'" >{{ct.commit| truncate(35)}}</span>
-                <a v-else @click="open(`https://grin-fans.org/commit/${ct.commit}`)">{{ct.commit| truncate(35)}}</a>
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                {{ct.commit| truncate(35)}}
                 <span v-if="showCopy===index" @click="copy(index)">
                   <icon name="copy" scale="0.85" ></icon>
                 </span>
@@ -43,15 +41,14 @@
 
               </p>
               <small>{{ $t("msg.commit.heightCreated") }}: 
-                <span  v-if="ct.status=='Unconfirmed'">{{ct.height}}</span>
-                <a v-else @click="open(`https://grin-fans.org/block/${ct.height}`)">{{ct.height}}</a>
+                {{ct.height}}
               </small>
             </div>
           </div>
           <div class="level-right">
             <div class="has-text-right">
               <p class="title is-6 is-marginless">
-                {{ ct.value/1000000000 }} ツ
+                {{ ct.value/1000000000 }} Ҝ
               </p>
               <span v-if="ct.status=='Unspent'" class="tag is-link">{{ $t("msg.commit.unspent") }}</span>
               <span v-if="ct.status=='toUnspent'" class="tag is-warning">({{ct.confirmed_count+'/10'}}) {{ $t("msg.unconfirmed") }} </span>

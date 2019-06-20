@@ -1,10 +1,10 @@
 <template>
   <div class="notification is-link" style="width:260px;">
     <p class="subtitle is-5">{{ $t("msg.info.spendable") }}:</p>
-    <p class="title" v-bind:class="{'is-2':!smallTitle, 'is-4':smallTitle}">{{spendable}} ツ</p>
-    <p>{{ $t("msg.info.total") }}: {{total}} ツ</p> 
-    <p>{{ $t("msg.unconfirmed") }}: {{unconfirmed}} ツ</p>
-    <p>{{ $t("msg.locked") }}: {{locked}} ツ</p>
+    <p class="title" v-bind:class="{'is-2':!smallTitle, 'is-4':smallTitle}">{{spendable}} Ҝ</p>
+    <p>{{ $t("msg.info.total") }}: {{total}} Ҝ</p> 
+    <p>{{ $t("msg.unconfirmed") }}: {{unconfirmed}} Ҝ</p>
+    <p>{{ $t("msg.locked") }}: {{locked}} Ҝ</p>
   </div>
 </template>
 

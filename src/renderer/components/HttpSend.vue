@@ -16,13 +16,13 @@
         <div class="field">
           <label class="label">{{ $t("msg.httpSend.address") }}(HTTP/HTTPS)</label>
           <div class="control">
-            <input class="input" type="text" v-model="address" placeholder="eg: https://donation.niffler.org:3415">
+            <input class="input" type="text" v-model="address" placeholder="">
           </div>
         </div>
         <div class="field">
           <label class="label">{{ $t("msg.httpSend.sendAmount") }}</label>
           <div class="control">
-            <input class="input" type="text" v-model="amount" placeholder="1 ツ">
+            <input class="input" type="text" v-model="amount" placeholder="1 Ҝ">
           </div>
         </div>
 
@@ -201,7 +201,7 @@ export default {
                 content: JSON.stringify(slate),
                 //data:JSON.stringify(slate),
                 //headers: {
-                //   'User-Agent': 'grin-client',
+                //   'User-Agent': 'kepler-client',
                 //'transfer-encoding': ''
                 //},
               });

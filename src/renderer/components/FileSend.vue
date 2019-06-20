@@ -15,7 +15,7 @@
       <div class="field">
         <label class="label">{{ $t("msg.fileSend.sendAmount") }}</label>
         <div class="control">
-          <input class="input" type="text" v-model="amount" placeholder="1 ツ">
+          <input class="input" type="text" v-model="amount" placeholder="1 Ҝ">
         </div>
       </div>
       

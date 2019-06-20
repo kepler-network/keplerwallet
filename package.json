@@ -1,8 +1,8 @@
 {
-  "name": "Niffler",
-  "version": "0.3.3",
+  "name": "keplerwallet",
+  "version": "0.1.0",
   "author": "xiaojay <xiaojay@gmail.com>",
-  "description": "Niffler, a grin gui wallet",
+  "description": "keplerwallet, a kepler gui wallet",
   "license": "apache-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -19,8 +19,8 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "Niffler",
-    "appId": "org.niffler",
+    "productName": "keplerwallet",
+    "appId": "network.kepler",
     "directories": {
       "output": "build"
     },
@@ -53,7 +53,7 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns",
+      "icon": "build/icons/logo.icns",
       "extraFiles": [
         {
           "from": "resources/bin/mac",
@@ -116,11 +116,11 @@
         }
       ],
       "desktop": {
-        "Name": "Niffler",
+        "Name": "Kepler",
         "Encoding": "UTF-8",
         "Type": "Application",
-        "Comment": "Niffler, a grin gui wallet",
-        "StartupWMClass": "Niffler"
+        "Comment": "keplerwallet, a kepler gui wallet",
+        "StartupWMClass": "keplerwallet"
       }
     }
   },

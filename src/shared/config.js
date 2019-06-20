@@ -32,26 +32,26 @@ const binariesPath =
     ? path.join(process.resourcesPath, 'bin', platform)
     : path.join(root, 'resources', 'bin', platform);
 
-const grinBinaries = platform==='win'?'grin-wallet.exe':'grin-wallet'
-export let grinPath = path.join(binariesPath, grinBinaries)
+const keplerBinaries = platform==='win'?'kepler-wallet.exe':'kepler-wallet'
+export let keplerPath = path.join(binariesPath, keplerBinaries)
 if(platform=='win'){
-  grinPath = '"' + path.resolve(grinPath) + '"' 
+  keplerPath = '"' + path.resolve(keplerPath) + '"' 
 }
 export const chainType = 'main'
-export const grinNode = "http://node.niffler.org:3413"
-export const grinNode2 = "http://node2.niffler.org:3413"
-export const seedPath = path.join(APP.getPath('home'), '.grin', chainType, 'wallet_data/wallet.seed')
-export const walletTOMLPath = path.join(APP.getPath('home'), '.grin', chainType, 'grin-wallet.toml')
-export const walletPath = path.join(APP.getPath('home'), '.grin', chainType)
-export const apiSecretPath = path.join(APP.getPath('home'), '.grin', chainType, '.api_secret')
-export const nifflerPath = path.join(APP.getPath('home'), '.niffler')
-export const logDir = path.join(nifflerPath, 'log')
-export const tempTxDir = path.join(nifflerPath, 'temp_tx')
+export const keplerNode = "http://node110.keplerwallet.org:7413"
+export const keplerNode2 = "http://node110-2.keplerwallet.org:7413"
+export const seedPath = path.join(APP.getPath('home'), '.kepler', chainType, 'wallet_data/wallet.seed')
+export const walletTOMLPath = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-wallet.toml')
+export const walletPath = path.join(APP.getPath('home'), '.kepler', chainType)
+export const apiSecretPath = path.join(APP.getPath('home'), '.kepler', chainType, '.api_secret')
+export const kwPath = path.join(APP.getPath('home'), '.keplerwallet')
+export const logDir = path.join(kwPath, 'log')
+export const tempTxDir = path.join(kwPath, 'temp_tx')
 
-export const configPath = path.join(nifflerPath, 'config.json')
+export const configPath = path.join(kwPath, 'config.json')
 
-export const releaseUrl = 'https://api.github.com/repos/grinfans/niffler/releases/latest'
-export const downloadUrl = 'https://github.com/grinfans/niffler/releases/latest'
+export const releaseUrl = 'https://api.github.com/repos/xiaojay//keplerwallet/releases/latest'
+export const downloadUrl = 'https://github.com/xiaojay/keplerwallet/releases/latest'
 
 export function getConfig(){
   try{
@@ -100,11 +100,11 @@ function getLocale(){
   if(locale)return locale
   locale = APP.getLocale().toLowerCase()
   if(locale.startsWith('zh'))return 'zh'
-  if(locale.startsWith('ru'))return 'ru'
+  //if(locale.startsWith('ru'))return 'ru'
   return 'en'
 }
 export function setLocale(locale){
   updateConfig({'locale':locale})
 }
 export const locale = getLocale()
-export const langs = {'zh':'简体中文', 'en':'English', 'ru': 'русский'}
+export const langs = {'zh':'简体中文', 'en':'English'}//,'ru': 'русский'}

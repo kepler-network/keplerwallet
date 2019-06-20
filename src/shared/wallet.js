@@ -7,7 +7,7 @@ import axios from 'axios'
 require('promise.prototype.finally').shim();
 
 import log from './logger'
-import {platform, grinPath, seedPath, grinNode, grinNode2, chainType, apiSecretPath, walletTOMLPath, walletPath, grinRsWallet, nodeExecutable, tempTxDir} from './config'
+import {platform, keplerPath, seedPath, keplerNode, keplerNode2, chainType, apiSecretPath, walletTOMLPath, walletPath, grinRsWallet, nodeExecutable, tempTxDir} from './config'
 import { messageBus } from '../renderer/messagebus'
 
 let ownerAPI
@@ -54,7 +54,7 @@ class WalletService {
             client = axios.create({
                 baseURL: wallet_host,
                 auth: {
-                    username: 'grin',
+                    username: 'kepler',
                     password: fs.readFileSync(apiSecretPath).toString()
                 },
             })
@@ -134,10 +134,10 @@ class WalletService {
         enableForeignApi()
 
         if(platform === 'linux'){
-            ownerAPI = execFile(grinPath, ['-r', grinNode, 'owner_api']) 
+            ownerAPI = execFile(keplerPath, ['-r', keplerNode, 'owner_api']) 
         }else{
-            const cmd = platform==='win'? `${grinPath} -r ${grinNode} --pass ${addQuotations(password)} owner_api`:
-                                        `${grinPath} -r ${grinNode} owner_api`
+            const cmd = platform==='win'? `${keplerPath} -r ${keplerNode} --pass ${addQuotations(password)} owner_api`:
+                                        `${keplerPath} -r ${keplerNode} owner_api`
             //log.debug(`platform: ${platform}; start owner api cmd: ${cmd}`)
             ownerAPI =  exec(cmd)
         }
@@ -159,10 +159,10 @@ class WalletService {
     static startListen(password=password_){
         WalletService.stopProcess('listen')
         if(platform==='linux'){
-            listenProcess =  execFile(grinPath, ['-e', 'listen']) 
+            listenProcess =  execFile(keplerPath, ['-e', 'listen']) 
         }else{
-            const cmd = platform==='win'? `${grinPath} -e --pass ${addQuotations(password)} listen`:
-                                        `${grinPath} -e listen`
+            const cmd = platform==='win'? `${keplerPath} -e --pass ${addQuotations(password)} listen`:
+                                        `${keplerPath} -e listen`
             //log.debug(`platform: ${platform}; start listen cmd: ${cmd}`)
             listenProcess =  exec(cmd)
         }
@@ -196,9 +196,9 @@ class WalletService {
     }
 
     static new(password){
-        const cmd = platform==='win'? `${grinPath} -r ${grinNode} --pass ${addQuotations(password)} init`:
-                                      `${grinPath} -r ${grinNode} init`
-        log.debug(`function new: platform: ${platform}; grin bin: ${grinPath}; grin node: ${grinNode}`); 
+        const cmd = platform==='win'? `${keplerPath} -r ${keplerNode} --pass ${addQuotations(password)} init`:
+                                      `${keplerPath} -r ${keplerNode} init`
+        log.debug(`function new: platform: ${platform}; kepler bin: ${keplerPath}; kepler node: ${keplerNode}`); 
         let createProcess = exec(cmd)
         createProcess.stdout.on('data', (data) => {
             let output = data.toString()
@@ -237,7 +237,7 @@ class WalletService {
 
     static send(amount, method, dest, version){
         let dest_ = '"' + path.resolve(dest) + '"'
-        const cmd = `${grinPath} -r ${grinNode} -p ${addQuotations(password_)} send -m ${method} -d ${dest_} -v ${version} ${amount}`
+        const cmd = `${keplerPath} -r ${keplerNode} -p ${addQuotations(password_)} send -m ${method} -d ${dest_} -v ${version} ${amount}`
         //log.debug(cmd)
         return execPromise(cmd)
     }
@@ -261,7 +261,7 @@ class WalletService {
 
     static finalize(fn){
         let fn_ = '"' + path.resolve(fn) + '"'
-        const cmd = `${grinPath} -r ${grinNode} -p ${addQuotations(password_)} finalize -i ${fn_}`
+        const cmd = `${keplerPath} -r ${keplerNode} -p ${addQuotations(password_)} finalize -i ${fn_}`
         //log.debug(cmd)
         return execPromise(cmd)
     }
@@ -277,7 +277,7 @@ class WalletService {
             return  WalletService.recoverOnWindows(seeds, password)
         }
         let rcProcess
-        let args = ['--node_api_http_addr', grinNode, 'node_api_secret_path', path.resolve(apiSecretPath),
+        let args = ['--node_api_http_addr', keplerNode, 'node_api_secret_path', path.resolve(apiSecretPath),
             '--wallet_dir', path.resolve(walletPath), '--seeds', seeds,
             '--password', password]
         try{
@@ -301,7 +301,7 @@ class WalletService {
     }
 
     static recoverOnWindows(seeds, password){
-        let args = [grinRsWallet, '--node_api_http_addr', grinNode2,
+        let args = [grinRsWallet, '--node_api_http_addr', keplerNode2,
             '--node_api_secret_path', path.resolve(apiSecretPath),
             '--wallet_dir', path.resolve(walletPath), 
             '--seeds', seeds, '--password', password]
@@ -327,11 +327,11 @@ class WalletService {
     }
 
     static check(cb){
-        let grin = grinPath
+        let k = keplerPath
         if(platform==='win'){
-            grin = grinPath.slice(1,-1)
+            k = keplerPath.slice(1,-1)
         }
-        checkProcess = spawn(grin, ['-r', grinNode2, '-p', password_, 'check']);
+        checkProcess = spawn(k, ['-r', keplerNode2, '-p', password_, 'check']);
 
         let ck = checkProcess
         processes['check'] = checkProcess
@@ -346,22 +346,22 @@ class WalletService {
             cb(output)
         })
         ck.on('close', function(code){
-            log.debug('grin wallet check exists with code: ' + code);
+            log.debug('kepler wallet check exists with code: ' + code);
             if(code==0){return messageBus.$emit('walletCheckFinished')}
         });
     }
 
     static restore(password, cb){
-        let grin = grinPath
+        let k = keplerPath
         if(platform==='win'){
-            grin = grinPath.slice(1,-1)
+            k = keplerPath.slice(1,-1)
         }
-        restoreProcess = spawn(grin, ['-r', grinNode2, '-p', password, 'restore']);
+        restoreProcess = spawn(k, ['-r', keplerNode2, '-p', password, 'restore']);
         let rs = restoreProcess
         processes['restore'] = restoreProcess
         localStorage.setItem('restoreProcessPID', restoreProcess.pid)
         
-        log.debug('grin wallet restore process running with pid: ' + restoreProcess.pid);
+        log.debug('kepler wallet restore process running with pid: ' + restoreProcess.pid);
 
         rs.stdout.on('data', function(data){
             let output = data.toString()
@@ -372,40 +372,12 @@ class WalletService {
             cb(output)
         })
         rs.on('close', function(code){
-            log.debug('grin wallet restore exists with code: ' + code);
+            log.debug('kepler wallet restore exists with code: ' + code);
             if(code==0){return messageBus.$emit('walletRestored')}
         });
     }
 
-    //https://github.com/mimblewimble/grin-wallet/issues/110
-    //static initR(seeds, newPassword){
-    //    log.debug(grinPath)
-    //    initRProcess = spawn(grinPath, ['init', '-r']);
-    //    localStorage.setItem('initRProcessPID', initRProcess.pid)
-    //    initRProcess.stdout.on('data', (data) => {
-    //        let output = data.toString()
-    //        log.debug('Wallet initR process return: ' + output)
-    //        if (output.includes("Please enter your recovery phrase:")){
-    //            log.debug('function initR: time to entry seeds.')
-    //            initRProcess.stdin.write(seeds + "\n");
-    //        }
-    //        if (output.includes("Recovery word phrase is invalid")){
-    //            log.debug('function initR: invalid seeds.')
-    //            stopProcess('initR')
-    //            return messageBus.$emit('invalidSeeds')
-    //        }
-    //        if (output.startsWith("Password:")){
-    //            log.debug('function initR: time to entry password.')
-    //            initRProcess.stdin.write(newPassword + "\n");
-    //            initRProcess.stdin.write(newPassword + "\n");
-    //        }
-    //        if(output.includes("Command 'init' completed successfully")){
-    //            log.debug('function initR: wallet initRed.')
-    //            return messageBus.$emit('walletInitRed')
-    //        }
-    //    })
-    //}
-    
+
     static stopProcess(processName){
         let pidName = `${processName}ProcessPID`
         const pid = localStorage.getItem(pidName)

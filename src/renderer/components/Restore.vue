@@ -174,8 +174,6 @@ export default {
     },
     
     updateOutput(data){
-      //let toDel = 'grin_wallet_libwallet::internal::restore'
-      //this.restoreOutputs.push(data.replace(toDel, '').replace('WARN', ''))
       this.restoreOutputs.push(data)
     },
 
