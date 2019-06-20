@@ -1,5 +1,5 @@
 <template>
-  <section class="hero is-link is-fullheight">
+  <section class="hero is-fullheight">
     <div class="hero-body">
       <div class="container">
         <div class="columns is-mobile is-centered">
@@ -17,24 +17,24 @@
                 </div>
 
                 <div class="control">
-                  <a class="button is-warning" @click="add">{{ $t('msg.restore.add') }}</a>
+                  <a class="button is-primary" @click="add">{{ $t('msg.restore.add') }}</a>
                 </div>
               </div>
-              <p class="help is-warning" v-show="currentSeedInvalid">{{ $t('msg.restore.invalid') }}</p>
-              <button class="button is-link is-inverted is-outlined is-small" @click="delete_">{{ $t('msg.restore.delete') }}</button>
-              <button class="button is-link is-inverted is-outlined is-small" @click="back">{{ $t("msg.back") }}</button>
+              <p class="help is-primary" v-show="currentSeedInvalid">{{ $t('msg.restore.invalid') }}</p>
+              <button class="button is-info is-inverted is-outlined is-small" @click="delete_">{{ $t('msg.restore.delete') }}</button>
+              <button class="button is-info is-inverted is-outlined is-small" @click="back">{{ $t("msg.back") }}</button>
 
               <br/>
               <br/>
               <div class="tags are-medium">
                 <span class="tag" v-for="seed in seeds">{{seed}}</span>
               </div>
-              <a class="button is-link is-inverted is-outlined" v-show="enoughSeeds" @click="page='addPassword'">
+              <a class="button is-info is-inverted is-outlined" v-show="enoughSeeds" @click="page='addPassword'">
                 {{ $t('msg.restore.added') }}</a>
             </div>
 
             <div v-else-if="page==='addPassword'">
-              <p class="has-text-weight-semibold has-text-warning" 
+              <p class="has-text-weight-semibold has-text-primary" 
                 style="margin-bottom:12px">
                 {{ $t('msg.restore.newPassword') }}
               </p>
@@ -44,7 +44,7 @@
                   <label class="label">{{ $t('msg.password') }}</label>
                   <div class="control">
                     <input class="input" type="password" placeholder="********" required
-                      :class="{'is-warning': errorPassword}" v-model="password">
+                      :class="{'is-primary': errorPassword}" v-model="password">
                   </div>
                 </div>
 
@@ -52,13 +52,13 @@
                   <label class="label">{{ $t('msg.passwordAgain') }}</label>
                   <div class="control">
                     <input class="input" type="password" placeholder="********" required
-                      :class="{'is-warning': errorPassword}" v-model="password2">
+                      :class="{'is-primary': errorPassword}" v-model="password2">
                   </div>
-                  <p class="help is-warning" v-if="errorPassword">{{errorInfoPassword}}</p>
+                  <p class="help is-primary" v-if="errorPassword">{{errorInfoPassword}}</p>
                 </div>
             
                 <div class="field">
-                  <button class="button is-link" @click="initR" >
+                  <button class="button is-info" @click="initR" >
                     {{ $t('msg.restore.recover') }}</button>
                   <button class="button is-text" @click="page='addSeeds'">
                     {{ $t("msg.back") }}</button>
@@ -67,22 +67,22 @@
             </div>
           
           <div v-else-if="page==='recoverError'"> 
-            <div class="notification is-warning">
+            <div class="notification is-primary">
             <p>{{recoverErrorInfo}}</p>
             </div>
 
-            <button class="button is-link is-inverted is-outlined" @click="page='addSeeds'">
+            <button class="button is-info is-inverted is-outlined" @click="page='addSeeds'">
               {{ $t('msg.restore.reAdd') }}
             </button>
           </div>
           <div v-else-if="page==='recovered'"> 
-            <div class="animated bounce has-text-weight-semibold has-text-warning" 
+            <div class="animated bounce has-text-weight-semibold has-text-primary" 
                 style="animation-iteration-count:2;margin-bottom:10px">
                 <p>{{ $t('msg.restore.recovered') }} </p>
                 <p>{{ $t('msg.restore.restoring') }}</p>
             </div>
               <div v-if="restoreOutputs.length > 0">
-                <div class="message is-link" style="width:400px">
+                <div class="message is-info" style="width:400px">
                   <div class="message-body">
                     <div class="control">
                       <p class="is-size-7" v-for="output in restoreOutputs">{{ output }}</p>
@@ -92,11 +92,11 @@
               </div>
           </div>
           <div v-else-if="page==='restored'"> 
-            <p class="animated bounce has-text-weight-semibold has-text-warning is-size-5" 
+            <p class="animated bounce has-text-weight-semibold has-text-primary is-size-5" 
                 style="animation-iteration-count:2;margin-bottom:40px">
                 {{ $t('msg.restore.restored') }}
             </p>
-            <a class="button is-link is-inverted is-outlined" @click="toLogin">{{ $t('msg.restore.login') }}</a>
+            <a class="button is-info is-inverted is-outlined" @click="toLogin">{{ $t('msg.restore.login') }}</a>
           </div>
           </div>
         </div>

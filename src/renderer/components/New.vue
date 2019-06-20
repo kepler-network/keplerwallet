@@ -1,5 +1,5 @@
 <template>
-  <section class="hero is-link is-fullheight" v-if="current==='new'">
+  <section class="hero is-fullheight" v-if="current==='new'">
     <div class="hero-body">
       <div class="container">
         <div class="columns is-mobile is-centered">

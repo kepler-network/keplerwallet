@@ -4,12 +4,12 @@
   <div class="modal-background" @click="closeModal"></div>
   <div class="modal-card" style="width:480px">
     <header class="modal-card-head">
-      <p class="modal-card-title is-size-4 has-text-link has-text-weight-semibold">{{ $t("msg.send") }}</p>
+      <p class="modal-card-title is-size-4 has-text-info has-text-weight-semibold">{{ $t("msg.send") }}</p>
       <button class="delete" aria-label="close" @click="closeModal"></button>
     </header>
-    <section class="modal-card-body" style="height:300px;background-color: whitesmoke;">
+    <section class="modal-card-body" style="height:300px">
       
-      <div class="notification is-warning" v-if="errors.length">
+      <div class="notification is-primary" v-if="errors.length">
         <p v-for="error in errors">{{ error }}</p>
       </div>
       <div class="field">
@@ -37,7 +37,7 @@
        <br/>
       <div class="field is-grouped">
         <div class="control">
-          <button class="button is-link" @click="send">{{ $t("msg.fileSend.createTxFile") }}</button>
+          <button class="button is-info" @click="send">{{ $t("msg.fileSend.createTxFile") }}</button>
         </div>
         <div class="control">
           <button class="button is-text" @click="closeModal">{{ $t("msg.cancel") }}</button>

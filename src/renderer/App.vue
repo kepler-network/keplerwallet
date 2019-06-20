@@ -9,7 +9,7 @@
           <div class="dropdown column is-1" style="margin-left:25px;margin-top: auto;" 
             v-bind:class="{'is-active':isDroppingDown}" >
             <div class="dropdown-trigger" >
-              <button class="button is-link is-outlined" v-bind:class="{'is-small2':isRu}"
+              <button class="button is-info is-outlined" v-bind:class="{'is-small2':isRu}"
                 aria-haspopup="true" aria-controls="dropdown-menu"
                 @click="isDroppingDown=!isDroppingDown;isDroppingDown2=false;isDroppingDown3=false">
                 {{ $t("msg.send") }}
@@ -36,7 +36,7 @@
           <div class="dropdown column column is-1" style="margin-left:-5px;margin-top:auto;" 
             v-bind:class="{'is-active':isDroppingDown2}" >
             <div class="dropdown-trigger" >
-              <button class="button is-link is-outlined" v-bind:class="{'is-small2':isRu}"
+              <button class="button is-info is-outlined" v-bind:class="{'is-small2':isRu}"
                 aria-haspopup="true" aria-controls="dropdown-menu"
                 @click="isDroppingDown2=!isDroppingDown2;isDroppingDown=false;isDroppingDown3=false">
                 {{ $t("msg.receive") }}
@@ -56,7 +56,7 @@
 
           <div class="column column is-1" style="margin-top: auto; margin-left:25px;">
            
-            <button class="button is-link is-outlined" v-bind:class="{'is-small2':isRu}" @click="openHedwigV1 = true">
+            <button class="button is-info is-outlined" v-bind:class="{'is-small2':isRu}" @click="openHedwigV1 = true">
                <span class="icon-running icon-status animated infinite pulse delay-2s" v-if="hedwigRunning"></span>
                <span class="icon-failed icon-status animated infinite pulse delay-2s" v-if="hedwigFailed"></span>
                {{ $t("msg.app.hedwig") }}
@@ -66,13 +66,12 @@
 
           <div class="column is-offset-1 is-2" style="margin-left:80px;">
             <div class="level">
-              <p class="is-size-7 tag is-warning animated" v-bind:class="{headShake: isAnimate}" style="animation-iteration-count:3">
+              <p class="is-size-7 tag is-primary animated" v-bind:class="{headShake: isAnimate}" style="animation-iteration-count:3">
                 {{ $t("msg.app.height") }}:{{height}}</p>
               &nbsp;
-              <!--<a class="button is-small is-link is-outlined" @click.prevent="logout">{{ $t("msg.logout") }}</a>-->
               <div class="dropdown is-right" v-bind:class="{'is-active':isDroppingDown3}">
                 <div class="dropdown-trigger">
-                  <button class="button is-small is-link is-outlined" aria-haspopup="true" aria-controls="dropdown-menu"
+                  <button class="button is-small is-info is-outlined" aria-haspopup="true" aria-controls="dropdown-menu"
                   @click="isDroppingDown3=!isDroppingDown3;isDroppingDown=false;isDroppingDown2=false" style="width:50px">
                     <span>{{ $t("msg.more") }}</span>
                   </button>

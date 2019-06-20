@@ -1,5 +1,5 @@
 <template>
-  <section class="hero is-link is-fullheight">
+  <section class="hero is-fullheight">
     <div class="hero-body">
       <div class="container">
         <div class="columns is-mobile is-centered">
@@ -7,7 +7,7 @@
             
             <h1 class="title">{{ $t('msg.create.seedPhrase') }}</h1>
             
-              <p class="animated bounce has-text-weight-semibold has-text-warning" style="animation-iteration-count:3">
+              <p class="animated bounce has-text-weight-semibold has-text-primary" style="animation-iteration-count:3">
                 {{ $t('msg.create.backupNote') }}
               </p>
 
@@ -16,14 +16,14 @@
                 <span class="tag" v-for="seed in seeds">{{seed}}</span>
               </div>
 
-            <a class="button is-link is-inverted is-outlined" @click="finish">{{ $t('msg.create.backupFinish') }}</a>
+            <a class="button is-info is-inverted is-outlined" @click="finish">{{ $t('msg.create.backupFinish') }}</a>
           </div>
               
           <div v-else class="column is-8" >
-            <img src="../assets/logo.png" style="width:64px" class="is-pulled-left">
+            <!--<img src="../assets/logo.png" style="width:64px" class="is-pulled-left">-->
             <h2 class="title" style="margin-top: 24px; margin-left:70px" >{{ $t("msg.title") }}</h2>
 
-            <div class="message is-warning is-small">
+            <div class="message is-primary is-small">
               <div class="message-header">
                 <p>{{ $t("msg.welcome") }}</p>
               </div>
@@ -40,20 +40,20 @@
                 <label class="label">{{ $t('msg.password') }}</label>
                   <div class="control">
                     <input class="input" type="password" placeholder="********" required
-                      :class="{'is-warning': error}" v-model="password">
+                      :class="{'is-primary': error}" v-model="password">
                   </div>
                 </div>
                 <div class="field">
                 <label class="label">{{ $t('msg.passwordAgain') }}</label>
                   <div class="control">
                     <input class="input" type="password" placeholder="********" required
-                      :class="{'is-warning': error}" v-model="password2">
+                      :class="{'is-primary': error}" v-model="password2">
                   </div>
-                  <p class="help is-warning" v-if="error">{{errorInfo}}</p>
+                  <p class="help is-primary" v-if="error">{{errorInfo}}</p>
                 </div>
             
                 <div class="field">
-                  <button class="button is-link" @click.prevent="create" v-bind:class="{'is-loading':walletCreating}">
+                  <button class="button is-info" @click.prevent="create" v-bind:class="{'is-loading':walletCreating}">
                     {{ $t('msg.create.newWallet') }}
                   </button>
                   <button class="button is-text" @click="back">{{ $t("msg.back") }}</button>

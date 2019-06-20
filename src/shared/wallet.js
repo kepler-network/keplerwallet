@@ -18,8 +18,8 @@ let restoreProcess
 let processes = {}
 let client
 let password_
-const wallet_host = 'http://localhost:3420'
-const jsonRPCUrl = 'http://localhost:3420/v2/owner'
+const wallet_host = 'http://localhost:7420'
+const jsonRPCUrl = 'http://localhost:7420/v2/owner'
 
 function enableForeignApi(){
     const re = /owner_api_include_foreign(\s)*=(\s)*false/

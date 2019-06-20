@@ -4,10 +4,10 @@
   <div class="modal-background" @click="closeModal"></div>
   <div class="modal-card" style="width:300px">
     <header class="modal-card-head">
-      <p class="modal-card-title is-size-4 has-text-link has-text-weight-semibold">{{ $t("msg.lang.title") }}</p>
+      <p class="modal-card-title is-size-4 has-text-info has-text-weight-semibold">{{ $t("msg.lang.title") }}</p>
       <button class="delete" aria-label="close" @click="closeModal"></button>
     </header>
-    <section class="modal-card-body" style="height:200px;background-color: whitesmoke;">
+    <section class="modal-card-body" style="height:200px">
       
       
       <div class="field">
@@ -26,7 +26,7 @@
        <br/>
       <div class="field is-grouped">
         <div class="control">
-          <button class="button is-link" @click="select">{{ $t("msg.lang.select") }}</button>
+          <button class="button is-info" @click="select">{{ $t("msg.lang.select") }}</button>
         </div>
         <div class="control">
           <button class="button is-text" @click="closeModal">{{ $t("msg.cancel") }}</button>
