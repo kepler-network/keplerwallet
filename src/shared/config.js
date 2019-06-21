@@ -100,11 +100,11 @@ function getLocale(){
   if(locale)return locale
   locale = APP.getLocale().toLowerCase()
   if(locale.startsWith('zh'))return 'zh'
-  //if(locale.startsWith('ru'))return 'ru'
+  if(locale.startsWith('ru'))return 'ru'
   return 'en'
 }
 export function setLocale(locale){
   updateConfig({'locale':locale})
 }
 export const locale = getLocale()
-export const langs = {'zh':'简体中文', 'en':'English'}//,'ru': 'русский'}
+export const langs = {'zh':'简体中文', 'en':'English', 'ru': 'русский'}
