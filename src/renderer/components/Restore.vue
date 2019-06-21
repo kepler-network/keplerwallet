@@ -7,7 +7,7 @@
             
             <h1 class="title">{{ $t('msg.restore.title') }}</h1>
             <div v-if="page==='addSeeds'">
-              <p class="animated bounce has-text-weight-semibold has-text-warning" 
+              <p class="animated bounce has-text-weight-semibold has-text-primary" 
                 style="animation-iteration-count:2;margin-bottom:12px">
                 {{ $t('msg.restore.addSeedsInfo') }} ({{seeds.length}}/{{total}})
               </p>
@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="control">
-                  <a class="button is-primary" @click="add">{{ $t('msg.restore.add') }}</a>
+                  <a class="button is-info" @click="add">{{ $t('msg.restore.add') }}</a>
                 </div>
               </div>
               <p class="help is-primary" v-show="currentSeedInvalid">{{ $t('msg.restore.invalid') }}</p>

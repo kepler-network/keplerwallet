@@ -38,8 +38,8 @@ if(platform=='win'){
   keplerPath = '"' + path.resolve(keplerPath) + '"' 
 }
 export const chainType = 'main'
-export const keplerNode = "http://node110.keplerwallet.org:7413"
-export const keplerNode2 = "http://node110-2.keplerwallet.org:7413"
+export const keplerNode = "http://node.keplerwallet.org:7413"
+export const keplerNode2 = "http://node2.keplerwallet.org:7413"
 export const seedPath = path.join(APP.getPath('home'), '.kepler', chainType, 'wallet_data/wallet.seed')
 export const walletTOMLPath = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-wallet.toml')
 export const walletPath = path.join(APP.getPath('home'), '.kepler', chainType)

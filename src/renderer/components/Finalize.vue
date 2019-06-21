@@ -13,14 +13,14 @@
         <p v-for="error in errors">{{ error }}</p>
       </div>
       <div class="center">
-        <a class="button is-primary is-outlined" v-if="errors.length" @click="clearup">{{ $t("msg.clearup") }}</a>
+        <a class="button is-info is-outlined" v-if="errors.length" @click="clearup">{{ $t("msg.clearup") }}</a>
       </div>
 
       <div class="notification is-primary" v-show="isSent">
         {{ $t("msg.finalize.success") }}
       </div>
       <div class="center">
-        <a class="button is-primary is-outlined" v-show="isSent" @click="closeModal">
+        <a class="button is-info is-outlined" v-show="isSent" @click="closeModal">
           {{ $t("msg.finalize.ok") }}
         </a>
       </div>
