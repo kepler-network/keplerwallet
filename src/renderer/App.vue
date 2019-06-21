@@ -369,14 +369,14 @@
 }
 .icon-status{
   display: inline-block;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  border-radius: 25px;
-  height: 15px;
-  width: 15px;
-  border-width: 4px;
+  -webkit-border-radius: 22px;
+  -moz-border-radius: 22px;
+  border-radius: 22px;
+  height: 14px;
+  width: 14px;
+  border-width: 2.5px;
   border-style: solid;
-  margin-right: 4px;
+  margin-right: 2.5px;
   vertical-align: top;
 }
 .button.is-small2 {
