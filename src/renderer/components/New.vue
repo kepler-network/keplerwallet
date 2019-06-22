@@ -4,16 +4,16 @@
       <div class="container">
         <div class="columns is-mobile is-centered">
           <div class="column is-6" >
-            <h2 class="title" style="margin-top: 24px; margin-left:2px;font-size:2.5rem" >{{ $t("msg.title") }}</h2>              
+            <h2 class="title is-size-3 has-text-weight-bold" style="margin-top: 24px; margin-left:8px;" >{{ $t("msg.title") }}</h2>              
             <div class="column">
-                <a class="button is-link is-inverted is-outlined" @click="current='create'">
+                <a class="button is-info" @click="current='create'">
                 {{ $t("msg.new_.create") }}</a>
               </div>
-              <div class="column"><a class="button is-link is-inverted is-outlined" @click="current='restore'">
+              <div class="column"><a class="button is-info" @click="current='restore'">
                 {{ $t("msg.new_.restore") }}</a>
               </div>
               <div class="column">
-                <a class="button is-link is-inverted is-outlined has-text-grey" style="pointer-events: none;">
+                <a class="button is-info is-inverted is-outlined has-text-grey" style="pointer-events: none;">
                   {{ $t("msg.new_.import") }}</a>
               </div>
             </div>

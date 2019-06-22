@@ -1,6 +1,6 @@
 const messages = {
   msg: {
-    title: 'Kepler 钱包',
+    title: 'KEPLER 钱包',
     password: '密码',
     passwordAgain: '再次输入密码',
     wrongPassword: '密码错误',
