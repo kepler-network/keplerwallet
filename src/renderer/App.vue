@@ -372,8 +372,8 @@
   -webkit-border-radius: 22px;
   -moz-border-radius: 22px;
   border-radius: 22px;
-  height: 14px;
-  width: 14px;
+  height: 12px;
+  width: 12px;
   border-width: 2.5px;
   border-style: solid;
   margin-right: 2.5px;
