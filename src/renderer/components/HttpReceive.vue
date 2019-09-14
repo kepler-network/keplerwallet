@@ -72,6 +72,8 @@
 <script>
 import { messageBus } from '@/messagebus'
 import { setTimeout } from 'timers';
+import {keplerNode, keplerLocalNode} from '../../shared/config'
+
 const fs = require('fs');
 const publicIp = require('public-ip');
 const extIP = require('external-ip');
@@ -106,6 +108,8 @@ export default {
   },
   methods: {
     start(){
+      let gnode = keplerNode
+      if(this.$dbService.getGnodeLocation() == 'local')gnode=keplerLocalNode
       if((!this.starting)&&(!this.running)){
         this.starting = true
         this.checklocalReachable().catch((error)=>{

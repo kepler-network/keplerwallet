@@ -1,14 +1,16 @@
 import fs from 'fs'
 const fse = require('fs-extra')
-const path = require('path');
+const path = require('path')
 import {exec, execFile, spawn, fork} from 'child_process'
 
 import axios from 'axios'
 require('promise.prototype.finally').shim();
 
 import log from './logger'
-import {platform, keplerPath, seedPath, keplerNode, keplerNode2, chainType, apiSecretPath, walletTOMLPath, walletPath, grinRsWallet, nodeExecutable, tempTxDir} from './config'
+import {platform, keplerWalletPath, seedPath, keplerNode, keplerNode2, chainType, apiSecretPath, walletTOMLPath, walletPath, grinRsWallet, nodeExecutable, tempTxDir, gnodeOption} from './config'
 import { messageBus } from '../renderer/messagebus'
+import GnodeService from './gnode'
+import dbService from '../renderer/db'
 
 let ownerAPI
 let listenProcess
@@ -18,8 +20,9 @@ let restoreProcess
 let processes = {}
 let client
 let password_
-const wallet_host = 'http://localhost:7420'
+const walletHost = 'http://localhost:7420'
 const jsonRPCUrl = 'http://localhost:7420/v2/owner'
+const jsonRPCForeignUrl = 'http://localhost:7420/v2/foreign'
 
 function enableForeignApi(){
     const re = /owner_api_include_foreign(\s)*=(\s)*false/
@@ -52,7 +55,7 @@ class WalletService {
     static initClient() {
         if(fs.existsSync(apiSecretPath)){
             client = axios.create({
-                baseURL: wallet_host,
+                baseURL: walletHost,
                 auth: {
                     username: 'kepler',
                     password: fs.readFileSync(apiSecretPath).toString()
@@ -70,7 +73,7 @@ class WalletService {
         return false
     }
 
-    static jsonRPC(method, params){
+    static jsonRPC(method, params, isForeign){
         const headers = {
             'Content-Type': 'application/json'
         }
@@ -80,64 +83,61 @@ class WalletService {
             method: method,
             params: params,
         }
-        return client.post(jsonRPCUrl, body, headers)
+        const url = isForeign?jsonRPCForeignUrl:jsonRPCUrl
+        return client.post(url, body, headers)
     }
     
     static getNodeHeight(){
         if(client){
-            return client.get('/v1/wallet/owner/node_height')
+            return WalletService.jsonRPC('node_height', [], false)
         }
-    }
-
-    static getNodeHeight2(){
-        return WalletService.jsonRPC('node_height', [])
     }
     
     static getSummaryInfo(minimum_confirmations){
-        const url = `/v1/wallet/owner/retrieve_summary_info?refresh&minimum_confirmations=${minimum_confirmations}`
-        return client.get(url)
+        return WalletService.jsonRPC('retrieve_summary_info', [true, minimum_confirmations], false)
     }
-    static getTransactions(){
-        return client.get('/v1/wallet/owner/retrieve_txs?refresh')
+
+    static getTransactions(toRefresh, tx_id, tx_salte_id){
+        return WalletService.jsonRPC('retrieve_txs', [toRefresh, tx_id, tx_salte_id], false)
     }
-    static getCommits(show_spent=true){
-        const url = show_spent?
-            '/v1/wallet/owner/retrieve_outputs?refresh&show_spent':
-            '/v1/wallet/owner/retrieve_outputs?refresh'
-        return client.get(url)
+
+    static getCommits(include_spent, toRefresh, tx_id){
+        return WalletService.jsonRPC('retrieve_outputs', [include_spent, toRefresh, tx_id], false)
     }
-    static cancelTransactions(tx_id){
-        const url = `/v1/wallet/owner/cancel_tx?tx_id=${tx_id}`
-        return client.post(url)
+
+    static cancelTransactions(tx_id, tx_salte_id){
+        return WalletService.jsonRPC('cancel_tx', [tx_id, tx_salte_id])
     }
-    static receiveTransaction(tx_data){
-        return client.post('/v1/wallet/foreign/receive_tx', tx_data)
+
+    static receiveTransaction(slate, account, message){
+        return WalletService.jsonRPC('receive_tx', [slate, account, message], true)
     }
+
     static issueSendTransaction(tx_data){
-        return client.post('/v1/wallet/owner/issue_send_tx', tx_data)
-    }
-    static issueSendTransaction2(tx_data){
-        return WalletService.jsonRPC('initiate_tx', tx_data)
-    }
-    static finalizeTransaction(tx_data){
-        return client.post('/v1/wallet/owner/finalize_tx', tx_data)
-    }
-    static postTransaction(tx_data, isFluff){
-        const url = isFluff?
-            '/v1/wallet/owner/post_tx?fluff':
-            '/v1/wallet/owner/post_tx'
-        return client.post(url, tx_data)
+        return WalletService.jsonRPC('init_send_tx',  {'args': tx_data})
     }
 
-    static start(password){
-        WalletService.stopProcess('ownerAPI')
+    static lock_outputs(slate, participant_id){
+        return WalletService.jsonRPC('tx_lock_outputs',  [slate, participant_id])
+    }
+
+    static finalizeTransaction(slate){
+        return WalletService.jsonRPC('finalize_tx',  [slate])
+    }
+
+    static postTransaction(tx, isFluff){
+        return WalletService.jsonRPC('post_tx',  [tx, isFluff])
+    }
+ 
+    static startOwnerApi(password, keplerNodeToConnect){
+        //WalletService.stopProcess('ownerAPI')
         enableForeignApi()
-
+        
         if(platform === 'linux'){
-            ownerAPI = execFile(keplerPath, ['-r', keplerNode, 'owner_api']) 
+            ownerAPI = execFile(keplerWalletPath, ['-r', keplerNodeToConnect, 'owner_api']) 
         }else{
-            const cmd = platform==='win'? `${keplerPath} -r ${keplerNode} --pass ${addQuotations(password)} owner_api`:
-                                        `${keplerPath} -r ${keplerNode} owner_api`
+            const cmd = platform==='win'? `${keplerWalletPath} -r ${keplerNodeToConnect} --pass ${addQuotations(password)} owner_api`:
+                                        `${keplerWalletPath} -r ${keplerNodeToConnect} owner_api`
             //log.debug(`platform: ${platform}; start owner api cmd: ${cmd}`)
             ownerAPI =  exec(cmd)
         }
@@ -156,13 +156,20 @@ class WalletService {
         })
     }
 
-    static startListen(password=password_){
+    static restartOwnerApi(password, keplerNodeToConnect){
+        WalletService.stopProcess(ownerAPI)
+        setTimeout(()=>{
+            WalletService.startOwnerApi(password, keplerNodeToConnect)
+        }, 500)
+    }
+    
+    static startListen(gnode, password=password_){
         WalletService.stopProcess('listen')
         if(platform==='linux'){
-            listenProcess =  execFile(keplerPath, ['-e', 'listen']) 
+            listenProcess =  execFile(keplerWalletPath, ['-r', gnode, '-e', 'listen']) 
         }else{
-            const cmd = platform==='win'? `${keplerPath} -e --pass ${addQuotations(password)} listen`:
-                                        `${keplerPath} -e listen`
+            const cmd = platform==='win'? `${keplerWalletPath} -r ${gnode} -e --pass ${addQuotations(password)} listen`:
+                                        `${keplerWalletPath} -r ${gnode} -e listen`
             //log.debug(`platform: ${platform}; start listen cmd: ${cmd}`)
             listenProcess =  exec(cmd)
         }
@@ -190,15 +197,22 @@ class WalletService {
                 WalletService.stopProcess(ps)
             }
         }
+        
+        if(!gnodeOption.useLocalGnode || 
+           (!gnodeOption.background && dbService.getLocalGnodeStatus()=='running')){
+            log.debug('Try to stop local gnode.')
+            GnodeService.stopGnode2()
+        }
     }
+    
     static isExist(){
         return fs.existsSync(seedPath)?true:false
     }
 
     static new(password){
-        const cmd = platform==='win'? `${keplerPath} -r ${keplerNode} --pass ${addQuotations(password)} init`:
-                                      `${keplerPath} -r ${keplerNode} init`
-        log.debug(`function new: platform: ${platform}; kepler bin: ${keplerPath}; kepler node: ${keplerNode}`); 
+        const cmd = platform==='win'? `${keplerWalletPath} --pass ${addQuotations(password)} init`:
+                                      `${keplerWalletPath} init`
+        log.debug(`function new: platform: ${platform}; kepler bin: ${keplerWalletPath}`); 
         let createProcess = exec(cmd)
         createProcess.stdout.on('data', (data) => {
             let output = data.toString()
@@ -235,13 +249,6 @@ class WalletService {
         })
     }
 
-    static send(amount, method, dest, version){
-        let dest_ = '"' + path.resolve(dest) + '"'
-        const cmd = `${keplerPath} -r ${keplerNode} -p ${addQuotations(password_)} send -m ${method} -d ${dest_} -v ${version} ${amount}`
-        //log.debug(cmd)
-        return execPromise(cmd)
-    }
-
     static createSlate(amount, version){
         fse.ensureDirSync(tempTxDir)
 
@@ -257,13 +264,6 @@ class WalletService {
                 return reject(err)
             })
         })
-    }
-
-    static finalize(fn){
-        let fn_ = '"' + path.resolve(fn) + '"'
-        const cmd = `${keplerPath} -r ${keplerNode} -p ${addQuotations(password_)} finalize -i ${fn_}`
-        //log.debug(cmd)
-        return execPromise(cmd)
     }
 
     static finalizeSlate(slate){
@@ -326,13 +326,12 @@ class WalletService {
         })
     }
 
-    static check(cb){
-        let k = keplerPath
+    static check(cb, gnode){
+        let kepler = keplerWalletPath
         if(platform==='win'){
-            k = keplerPath.slice(1,-1)
+            kepler = keplerWalletPath.slice(1,-1)
         }
-        checkProcess = spawn(k, ['-r', keplerNode2, '-p', password_, 'check']);
-
+        checkProcess = spawn(kepler, ['-r', gnode, '-p', password_, 'check', '-d']);
         let ck = checkProcess
         processes['check'] = checkProcess
         localStorage.setItem('checkProcessPID', checkProcess.pid)
@@ -352,11 +351,11 @@ class WalletService {
     }
 
     static restore(password, cb){
-        let k = keplerPath
+        let kepler = keplerWalletPath
         if(platform==='win'){
-            k = keplerPath.slice(1,-1)
+            kepler = keplerWalletPath.slice(1,-1)
         }
-        restoreProcess = spawn(k, ['-r', keplerNode2, '-p', password, 'restore']);
+        restoreProcess = spawn(kepler, ['-r', keplerNode2, '-p', password, 'restore']);
         let rs = restoreProcess
         processes['restore'] = restoreProcess
         localStorage.setItem('restoreProcessPID', restoreProcess.pid)
@@ -376,7 +375,6 @@ class WalletService {
             if(code==0){return messageBus.$emit('walletRestored')}
         });
     }
-
 
     static stopProcess(processName){
         let pidName = `${processName}ProcessPID`

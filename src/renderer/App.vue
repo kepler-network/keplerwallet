@@ -64,10 +64,10 @@
 
           </div>
 
-          <div class="column is-offset-1 is-2" style="margin-left:80px;">
+          <div class="column is-offset-1 is-2" style="margin-left:40px;">
             <div class="level">
               <p class="is-size-7 tag is-primary animated" v-bind:class="{headShake: isAnimate}" style="animation-iteration-count:3">
-                {{ $t("msg.app.height") }}:{{height}}</p>
+                {{ $t("msg.app.height") }} ({{getGnodeLocationDisplay()}}):{{height}}</p>
               &nbsp;
               <div class="dropdown is-right" v-bind:class="{'is-active':isDroppingDown3}">
                 <div class="dropdown-trigger">
@@ -83,6 +83,11 @@
                       {{ $t("msg.check.title") }}
                     </a>
                     
+                    <a href="#" class="dropdown-item" style="line-height: 1.2;font-size: 0.8rem;" 
+                      @click="openGnode = true">
+                      {{ $t("msg.localNode") }}
+                    </a>
+
                     <a href="#" class="dropdown-item" style="line-height: 1.2;font-size: 0.8rem;" 
                       @click="openLang=true">
                       {{ $t("msg.lang.title") }}
@@ -113,6 +118,7 @@
       <hedwig-v1 :showModal="openHedwigV1"></hedwig-v1>
       <check :showModal="openCheck"></check>
       <lang :showModal="openLang"></lang>
+      <gnode :showModal="openGnode"></gnode>
     </div>
     <landing v-bind:walletExist="walletExist" v-else></landing>
   </div>
@@ -133,10 +139,10 @@
   import HedwigV1 from '@/components/HedwigV1'
   import Check from '@/components/Check'
   import Lang from '@/components/Lang'
-
+  import Gnode from '@/components/Gnode'
   import Landing from '@/components/Landing'
   import checkUpdate from '../shared/updateChecker'
-  import {downloadUrl, locale} from '../shared/config'
+  import {downloadUrl, locale, gnodeOption} from '../shared/config'
 
   const {ipcRenderer} = require('electron')
 
@@ -156,6 +162,7 @@
       Check,
       Landing,
       Lang,
+      Gnode
     },
     data(){
       return {
@@ -167,6 +174,7 @@
         openHedwigV1: false,
         openCheck: false,
         openLang:false,
+        openGnode:false,
 
         isDroppingDown: false,
         isDroppingDown2: false,
@@ -177,7 +185,7 @@
         walletExist:false,
         hedwigRunning:false,
         hedwigFailed:false,
-
+        isGnodeLocal: false,
         isRu: false
     }},
     mounted() {
@@ -186,6 +194,7 @@
         this.walletExist = true
       }
       this.getHeight()
+      this.updateIsLocalGnode()
       this.$log.debug(`Render main window mounted:height ${this.height}; owner_api running?${this.ownerApiRunning};wallet exists? ${this.walletExist}`)
     },
     created () {
@@ -225,6 +234,9 @@
         if(window =='windowLang'){
           this.openLang = false
         }
+        if(window =='windowGnode'){
+          this.openGnode = false
+        }
       })
       messageBus.$on('restoredThenLogin', ()=>{
         this.$log.info('wallet restored and now to login')
@@ -235,8 +247,12 @@
         this.$walletService.initClient()
         this.ownerApiRunning = true
         this.getHeight()
+        messageBus.$emit('update')
       })
-      messageBus.$on('update', ()=>this.getHeight())
+      messageBus.$on('update', ()=>{
+        this.getHeight()
+        this.updateIsLocalGnode()
+      })
       messageBus.$on('walletCreateFinished', ()=>{
         this.$log.info('app.vue got walletCreateFinished event')
         this.walletExist = true
@@ -309,20 +325,25 @@
             this.ownerApiRunning = false
           })
       },
+      
       getHeight(){
-        let ret = this.$walletService.getNodeHeight()
-        if(!ret)return "0"
-        ret.then(
+        this.$walletService.getNodeHeight().then(
           (res) =>{
-            this.height = res.data[0]
-          }).catch((error)=>{})
+            this.height = parseInt(res.data.result.Ok.height)
+          }).catch((error)=>{
+            this.$log.error(error)
+          })
       },
-      //getHeight(){
-      //  this.$walletService.getNodeHeight2().then(
-      //    (res) =>{
-      //      this.height = parseInt(res.data.result.Ok.height)
-      //    }).catch((error)=>{})
-      //},
+      
+      updateIsLocalGnode(){
+        //console.log(this.$dbService.getGnodeLocation())
+        if(this.$dbService.getGnodeLocation() == 'local'){
+          this.isGnodeLocal = true
+        }else{
+            this.isGnodeLocal = false
+        }
+      },
+
       logout(){
         this.$log.debug('logout')
         ipcRenderer.send('quit')
@@ -336,6 +357,13 @@
         }, interval)
       },
       
+      getGnodeLocationDisplay(){
+        if(this.isGnodeLocal){
+          return this.$t('msg.local')
+        }
+        return this.$t('msg.remote')
+      },
+
       async checkNewVersion(){
         let toUpdate = await checkUpdate()
         if(toUpdate){

@@ -32,21 +32,30 @@ const binariesPath =
     ? path.join(process.resourcesPath, 'bin', platform)
     : path.join(root, 'resources', 'bin', platform);
 
-const keplerBinaries = platform==='win'?'kepler-wallet.exe':'kepler-wallet'
-export let keplerPath = path.join(binariesPath, keplerBinaries)
+const keplerBinaries = platform==='win'?'kepler.exe':'kepler'
+const keplerWalletBinaries = platform==='win'?'kepler-wallet.exe':'kepler-wallet'
+
+export let  keplerPath = path.join(binariesPath, keplerBinaries)
+export let keplerWalletPath = path.join(binariesPath, keplerWalletBinaries)
+
 if(platform=='win'){
   keplerPath = '"' + path.resolve(keplerPath) + '"' 
+  keplerWalletPath = '"' + path.resolve(keplerWalletPath) + '"' 
 }
 export const chainType = 'main'
-export const keplerNode = "http://node.keplerwallet.org:7413"
-export const keplerNode2 = "http://node2.keplerwallet.org:7413"
+export const keplerDIR = path.join(APP.getPath('home'), '.kepler')
 export const seedPath = path.join(APP.getPath('home'), '.kepler', chainType, 'wallet_data/wallet.seed')
+export const nodeTOMLPath = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-server.toml')
 export const walletTOMLPath = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-wallet.toml')
 export const walletPath = path.join(APP.getPath('home'), '.kepler', chainType)
+export const walletDataPath = path.join(APP.getPath('home'), '.kepler', chainType, 'wallet_data')
+export const walletLogPath = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-wallet.log')
 export const apiSecretPath = path.join(APP.getPath('home'), '.kepler', chainType, '.api_secret')
 export const kwPath = path.join(APP.getPath('home'), '.keplerwallet')
 export const logDir = path.join(kwPath, 'log')
 export const tempTxDir = path.join(kwPath, 'temp_tx')
+export const keplerNodeLog = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-server.log')
+export const chainDataPath = path.join(APP.getPath('home'), '.kepler', chainType, 'chain_data')
 
 export const configPath = path.join(kwPath, 'config.json')
 
@@ -94,7 +103,6 @@ export const nodeExecutable =
       ? path.resolve(path.join(process.resourcesPath, 'bin', 'grinRs', 'node.exe'))
       : path.resolve(path.join(root, 'grinRs', 'node.exe'))
 
-
 function getLocale(){
   let locale = getConfig()['locale']
   if(locale)return locale
@@ -108,3 +116,21 @@ export function setLocale(locale){
 }
 export const locale = getLocale()
 export const langs = {'zh':'简体中文', 'en':'English', 'ru': 'русский'}
+
+
+import pkg from '../../package.json'
+export const version = pkg.version
+
+export const defaultGnodeOptions= {
+  'useLocalGnode': true,
+  //connnectMethod: localFirst, remoteFirst, localAllTime, remoteAllTime
+  'connectMethod':'remoteFirst',
+  'remoteAddr': 'http://node.keplerwallet.org:7413',
+  'localAddr': 'http://127.0.0.1:7413',
+  'background': true
+}
+export const gnodeOption = getConfig()['gnode']?getConfig()['gnode']: defaultGnodeOptions
+
+export const keplerNode = gnodeOption.remoteAddr
+export const keplerNode2 = gnodeOption.remoteAddr
+export const keplerLocalNode = gnodeOption.localAddr

@@ -8,7 +8,7 @@ import {checkFirstTime} from '../shared/first'
 checkFirstTime()
 
 import log from '../shared/logger'
-import {downloadUrl } from '../shared/config'
+import {downloadUrl, gnodeOption} from '../shared/config'
 
 /**
  * Set `__static` path to static files in production
@@ -30,6 +30,14 @@ if(process.platform!=='win32'){
   exec('pkill kepler-wallet')
 }else{
   exec('taskkill -f /im kepler-wallet.exe')
+}
+
+if(!gnodeOption.useLocalGnode){
+  if(process.platform!=='win32'){
+    exec('pkill kepler')
+  }else{
+    exec('taskkill -f /im kepler.exe')
+  }
 }
 
 let mainWindow

@@ -3,7 +3,7 @@ const messages = {
     title: 'Kepler Wallet',
     password: 'Password',
     passwordAgain: 'Enter password again',
-    wrongPassword: 'Wrong password',
+    wrongPassword: 'Failed to start Kepler owner api. May be Wrong password',
     login_: 'Login',
     logout: 'Logout',
     search: 'Search',
@@ -25,10 +25,25 @@ const messages = {
     msg: 'Message',
     more: 'More',
 
+    remote: 'remote',
+    local: 'local',
+    node: 'Node',
+    remoteNode: 'Remote node',
+    localNode: 'Local node',
+    other: 'Others',
+
     login: {
       walletExist: 'Found kepler wallet data exists; login with original password :-)',
     },
-    
+    remove:{
+      title: 'Remove Current Wallet',
+      warning: 'Warning !',
+      info: 'Before you remove current wallet, Make sure there is no kepler in this wallet or You write down the Seed Phrase !',
+      help: 'Enter "remove" into the input box below to confirm',
+      remove: 'Remove',
+      success: 'Current wallet was removed. Click "OK" to restart KeplerWallet.'
+    },
+
     create:{
       seedPhrase: 'Seed Phrase',
       toNewMsg: 'No wallet exists Found. Create a New One.',
@@ -80,6 +95,8 @@ const messages = {
     info: {
       spendable: 'Spendable',
       total: 'Total',
+      unfinalization: 'Unfinalization',
+      immature: 'Immature',
     },
 
     txs:{
@@ -88,6 +105,8 @@ const messages = {
       noTxFound: 'No transactions Found',
       noTx:'No transactions',
       cancelSuccess:'This transaction canceled',
+      CreateFailed: 'Failed to create new transcation file',
+      NotEnough: 'Not enough amount. Keep 0.01 as fee'
     },
 
     commit:{
@@ -196,8 +215,45 @@ const messages = {
       title: 'Select Language',
       lang: 'Language',
       select: 'Select'
-    }
+    },
 
+    gnode:{
+      title: 'Local kepler node',
+      tabStatus: 'Status',
+      tabPeers: 'Peers',
+      tabLog: 'Log',
+      tabConfig: 'Settings',
+      statusRunning: 'Running, Available',
+      statusSyncing: 'Syncing ...',
+      statusToStart: 'not Runing',
+      status:'Status',
+      localRemoteHeight: 'Local Height/Networking Height',
+      nodeVersion: 'Node Version',
+      protocolVersion: 'Protocol Version',
+      connectedCount: 'Connected Peers',
+      location: 'Location where kepler blockchain data store',
+      size: 'Size of kepler blockchain data',
+      restart: 'Restart kepler node',
+      height: 'height'
+    },
+      
+    gnodeConfig:{
+      warning: 'For General users, default setting is preferred!',
+      useLocalorNot: '(Recommend)Use local  kepler node',
+      connectMethod: 'Connect Method',
+      remoteFirst: '(Recommend)Remote kepler node is preferred, When remote node is not available, use local node.',
+      localFirst:  'Local kepler node is preferred when it is synced. Otherwise, use remote node.',
+      remoteAllTime: 'Use remote all the time',
+      localAllTime: 'Use local all the time',
+      background: '(Recommend)Runing kepler node background when KeplerWallet is closed.',
+      restoreToDefault: 'Restore to default setting',
+      saved: 'Settings was saved, Restart KeplerWallet to take effect.'
+    },
+      
+    gnodeConfigModal:{
+      config: 'kepler Local Node Settings',
+      title: 'kepler node settings'
+    }
   }
 }
 export default messages

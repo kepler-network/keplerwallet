@@ -18,23 +18,8 @@
           <input class="input" type="text" v-model="amount" placeholder="1 Ҝ">
         </div>
       </div>
-      
-      <div class="field">
-        <label class="label">{{ $t("msg.httpSend.salteVersion") }}</label>
 
-        <div class="control">
-          <div class="select">
-            <select v-model="slateVersion">
-              <option>0</option>
-              <option>1</option>
-              <option>2</option>
-            </select>
-          </div>
-        </div>
-        <p class="help"> {{ $t("msg.httpSend.salteVersionHelp") }}</p>
-      </div>
-      
-       <br/>
+      <br/>
       <div class="field is-grouped">
         <div class="control">
           <button class="button is-info" @click="send">{{ $t("msg.fileSend.createTxFile") }}</button>
@@ -81,15 +66,26 @@ export default {
       let re = /^\d+\.?\d*$/;
       return re.test(amount);
     },
+    enough(amount){
+      let spendable = this.$dbService.getSpendable()
+      if(spendable){
+        return spendable >= parseFloat(amount) + 0.01 //0.008
+      }
+      return false
+    },
     checkForm(){
       this.errors = []
       if (!this.amount || !this.validAmount(this.amount)) {
         this.errors.push(this.$t('msg.fileSend.WrongAmount'));
       }
+      if (this.amount && this.validAmount(this.amount) && !this.enough(this.amount)) {
+        this.errors.push(this.$t('msg.fileSend.NotEnough'));
+      }
       if (!this.errors.length) {
         return true;
       }
     },
+
     send(){
       if(this.checkForm()){
         let fn_output = this.$electron.remote.dialog.showSaveDialog({
@@ -97,39 +93,32 @@ export default {
           message: this.$t('msg.fileSend.saveMsg'),
         })
         let tx_data = {
-          "amount": this.amount * 1000000000, 
+          "amount": this.amount * 1000000000,
           "minimum_confirmations": 10,
           "method": "file",
           "dest": fn_output,
           "max_outputs": 500,
           "num_change_outputs": 1,
           "selection_strategy_is_use_all": true,
-          "target_slate_version": 1
         }
-        //this.$walletService.issueSendTransaction(tx_data).then(
-        //  (res) => {
-        //    if (fn_output){
-        //      fs.writeFileSync(fn_output, JSON.stringify(res.data))
-        //      this.$log.debug('new send tx file generated')
-        //      messageBus.$emit('update')
-        //      this.closeModal()
-        //    }
-        //  }).catch((error) => {
-        //    this.$log.error('issueSendTransaction error:' + error)
-        //    this.errors.push(this.$t('msg.fileSend.CreateFailed'))
-        //  })
-        //}
-        if (fn_output){
-          this.$walletService.send(this.amount, 'file', fn_output, parseInt(this.slateVersion)).then(
-            (res) => {
-                this.$log.debug('send return: '+res)
-                messageBus.$emit('update')
-                this.closeModal()
-            }).catch((error) => {
-              this.$log.error('send error:' + error)
-              this.errors.push(this.$t('msg.fileSend.CreateFailed'))
-            })
-          }
+        this.$walletService.issueSendTransaction(tx_data).then(
+          (res) => {
+            if (fn_output){
+              let slate = res.data.result.Ok
+              fs.writeFileSync(fn_output, JSON.stringify(slate))
+              this.$walletService.lock_outputs(slate, 0).then(
+                (res) =>{
+                  this.$log.debug('new send tx file generated')
+                  messageBus.$emit('update')
+                  this.closeModal()
+                }).catch((error) => {
+                  this.$log.error('error when try to lock output:' + error)
+              })
+            }
+          }).catch((error) => {
+            this.$log.error('issueSendTransaction error:' + error)
+            this.errors.push(this.$t('msg.fileSend.CreateFailed'))
+          })
         }
       },
 

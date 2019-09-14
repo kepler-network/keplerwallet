@@ -7,7 +7,8 @@ import 'bulmaswatch/superhero/bulmaswatch.min.css'
 
 import 'animate.css/animate.css'
 import { remote, ipcRenderer} from 'electron'
-
+import gnodeService from '../shared/gnode'
+import {RemoteGnodeService} from '../shared/gnode'
 import walletService from '../shared/wallet'
 import log from '../shared/logger'
 import dbService from '@/db'
@@ -16,6 +17,8 @@ import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 
 Vue.component('icon', Icon)
+Vue.gnodeService = Vue.prototype.$gnodeService = gnodeService
+Vue.remoteGnodeService = Vue.prototype.$remoteGnodeService = RemoteGnodeService
 
 Vue.walletService = Vue.prototype.$walletService = walletService
 Vue.dbService = Vue.prototype.$dbService = dbService
@@ -32,7 +35,7 @@ const messages = {
   zh,
 }
 
-import {locale} from '../shared/config'
+import {locale, gnodeOption} from '../shared/config'
 const i18n = new VueI18n({
   locale: locale,
   //locale: 'ru',
@@ -69,3 +72,8 @@ ipcRenderer.on('before-quit', ()=>{
   messageBus.$emit('quit')
   walletService.stopAll()
 })
+
+if(gnodeOption.useLocalGnode){
+  gnodeService.getStatus().then().catch((err)=>{
+    gnodeService.startGnode()})
+}

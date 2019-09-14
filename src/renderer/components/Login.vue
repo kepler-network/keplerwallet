@@ -4,7 +4,9 @@
       <div class="container">
         <div class="columns is-mobile is-centered">
           <div class="column is-6" >
-            <h2 class="title" style="margin-top: 24px; margin-left:25px;font-size:2rem" >{{ $t("msg.title") }}</h2>
+              <h2 class="title" style="margin-top:24px; margin-left:5px;font-size:1.75rem" >{{ $t("msg.title") }}
+              <span class="is-pulled-right" style="font-size:0.8rem;margin-right:15px;">v{{version}}</span>
+              </h2>
           </div>
         </div>
 
@@ -35,8 +37,12 @@
                   </button>
                 </div>
             </form>
+            <a class="button is-small is-text is-pulled-right" @click="openRemove=true">{{ $t("msg.remove.title") }}</a>
+            <a class="button is-small is-text is-pulled-right" @click="openGnodeConfig=true">{{ $t("msg.gnodeConfigModal.title") }}</a>
           </div>
         </div>
+        <remove :showModal="openRemove"></remove>
+        <gnode-config-modal :showModal="openGnodeConfig"></gnode-config-modal>
       </div>
     </div>
   </section>
@@ -45,15 +51,30 @@
 <script>
 import { messageBus } from '@/messagebus'
 import {isFirstTime} from '../../shared/first'
+import Remove from '@/components/Remove'
+import GnodeConfigModal from '@/components/GnodeConfigModal'
+
+import {version, keplerNode, gnodeOption, keplerNode2, keplerLocalNode} from '../../shared/config'
 
 export default {
   name: "login",
+    components: {
+      Remove,
+      GnodeConfigModal
+  },
   data() {
     return {
       firstTime:false,
       password: '', 
-      error: false 
+      error: false,    
+      openRemove: false,
+      openGnodeConfig:false,
+      version: version
     }
+  },
+  created(){
+    messageBus.$on('closeWindowRemove',()=>{this.openRemove = false})
+    messageBus.$on('closeWindowGnodeConfig',()=>{this.openGnodeConfig = false})
   },
   mounted(){
     this.$log.info('isfirst(login.vue)? '+isFirstTime())
@@ -67,8 +88,62 @@ export default {
 
       this.resetErrors()
       this.$walletService.initClient()
-      this.$walletService.start(this.password)
+      let selectGnode = async function(){
+        let localHeight
+        let remoteHeight
+        this.$log.debug('Time to select gnode.')
+        this.$log.debug('Use local gnode? ' + gnodeOption.useLocalGnode)  
+        this.$log.debug('Connect method is ' + gnodeOption.connectMethod)  
+        if(!gnodeOption.useLocalGnode){
+          this.$dbService.setGnodeLocation('remote')
+          this.$log.debug('use remote kepler node.')
+          return this.$walletService.startOwnerApi(this.password, keplerNode)
+        }  
+        if(gnodeOption.connectMethod ==='localAllTime'){
+          this.$dbService.setGnodeLocation('local')
+          this.$log.debug('use local kepler node.')
+          return this.$walletService.startOwnerApi(this.password, keplerLocalNode)
+        }else{
+          this.$remoteGnodeService.getStatus().then(
+            (res)=>{
+              remoteHeight = parseInt(res.data.tip.height)
+              this.$log.debug('Remote node height is ' + remoteHeight)
+              if(gnodeOption.connectMethod ==='remoteAllTime' || gnodeOption.connectMethod ==='remoteFirst'){
+                this.$dbService.setGnodeLocation('remote')
+                this.$log.debug('use remote kepler node.')
+                return this.$walletService.startOwnerApi(this.password, keplerNode)
+              }
+              this.$gnodeService.getStatus().then(
+                (res)=>{
+                  localHeight = parseInt(res.data.tip.height)
+                  let peersCount = parseInt(res.data.connections)
+                  this.$log.debug('local node height is ' + localHeight)
+                  this.$log.debug('local node peers count is ' + peersCount)
+                  if(localHeight + 60 >= remoteHeight && peersCount >= 6){
+                    this.$log.debug('use local kepler node.')
+                    this.$dbService.setGnodeLocation('local')
+                    return this.$walletService.startOwnerApi(this.password, keplerLocalNode)
+                  }else{
+                    this.$log.debug('local node height is too low or peers too small. use remote kepler node.')
+                    this.$dbService.setGnodeLocation('remote')
+                    return this.$walletService.startOwnerApi(this.password, keplerNode)
+                  }
+              }).catch((err)=>{
+                this.$log.error('local gnode failed. Use remote kepler node: ' + err)
+                this.$dbService.setGnodeLocation('remote')
+                return this.$walletService.startOwnerApi(this.password, keplerNode)
+              })
+            }
+          ).catch((err)=>{
+            this.$dbService.setGnodeLocation('local')
+            this.$log.debug('use local kepler node.')
+            return this.$walletService.startOwnerApi(this.password, keplerLocalNode)
+          })
+        }
+      }
+      setTimeout(()=>selectGnode.call(this), 50)
       setTimeout(()=>{
+        this.$log.debug('check owner api process after try to login')
         this.$walletService.getNodeHeight().then(
           (res) =>{
             setPassword(password)
@@ -76,7 +151,7 @@ export default {
            
           }).catch((error) => {
             return this.error = true
-        })}, 600)
+        })}, 1250)
       this.resetErrors()
       },
     resetErrors(){

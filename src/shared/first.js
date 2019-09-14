@@ -1,5 +1,5 @@
 var fs = require('fs');
-import { kwPath, logDir, getConfig, setConfig, updateConfig, tempTxDir} from './config';
+import { kwPath, logDir, getConfig, setConfig, updateConfig, tempTxDir, defaultGnodeOptions} from './config';
 
 export function checkFirstTime(){
     const isFirstTime = fs.existsSync(kwPath)?false:true
@@ -8,6 +8,7 @@ export function checkFirstTime(){
         fs.mkdirSync(logDir)
         fs.mkdirSync(tempTxDir)
         setConfig({'firstTime':true})
+        setConfig({'gnode': defaultGnodeOptions})
     }
     else{
         updateConfig({'firstTime':false})

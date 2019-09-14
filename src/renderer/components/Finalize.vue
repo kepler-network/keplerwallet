@@ -10,7 +10,7 @@
     <section class="modal-card-body" style="height:320px">
       
       <div class="notification is-primary" v-if="errors.length">
-        <p v-for="error in errors">{{ error }}</p>
+        <p v-for="error in errors" :key="error.id">{{ error }}</p>
       </div>
       <div class="center">
         <a class="button is-info is-outlined" v-if="errors.length" @click="clearup">{{ $t("msg.clearup") }}</a>
@@ -89,43 +89,32 @@ export default {
         }
 
         this.isSending = true
-        //let send = async function(){
-        //  try{
-        //    let res = await this.$walletService.finalizeTransaction(content)
-        //    tx_id = res.data.id
-        //    let res2 = await this.$walletService.postTransaction(res.data, true)
-        //    this.isSent = true
-        //    this.$dbService.addPostedUnconfirmedTx(tx_id)
-        //    this.$log.debug(`finalize tx ${tx_id} ok; return:${res.data}`)
-        //    this.$log.debug(`post tx ok; return:${res2.data}`)
-        //  }catch(error){
-        //    this.$log.error('finalize or post error:' + error)   
-        //    if (error.response) {   
-        //      let resp = error.response      
-        //      this.$log.error(`resp.data:${resp.data}; status:${resp.status};headers:${resp.headers}`)
-        //    }
-        //    this.errors.push(this.$t('msg.finalize.TxFailed'))
-        //  }finally{
-        //    this.isSending = false
-        //    messageBus.$emit('update')
-        //  }
-        //}
-        //send.call(this)
-        let finalize = async function(){
+        
+        let send = async function(){
           try{
-            let res = await this.$walletService.finalize(fn.path)
+            let res = await this.$walletService.finalizeTransaction(JSON.parse(content))
+            tx_id = res.data.result.Ok.id
+            let tx = res.data.result.Ok.tx
+            let res2 = await this.$walletService.postTransaction(tx, true)
             this.isSent = true
-            if(tx_id)this.$dbService.addPostedUnconfirmedTx(tx_id)
-            this.$log.debug(`finalize tx ${tx_id} ok; return:${res}`)
+            this.$dbService.addPostedUnconfirmedTx(tx_id)
+            this.$log.debug(`finalize tx ${tx_id} ok; return:${res.data}`)
+            this.$log.debug(`post tx ok; return:${res2.data}`)
           }catch(error){
-            this.$log.error('finalize or post error:' + error)        
+            this.$log.error('finalize or post error:' + error)
+            if (error.response) {
+              let resp = error.response
+              this.$log.error(`resp.data:${resp.data}; status:${resp.status};headers:     ${resp.headers}`)
+            }
             this.errors.push(this.$t('msg.finalize.TxFailed'))
           }finally{
             this.isSending = false
             messageBus.$emit('update')
           }
         }
-        finalize.call(this)
+
+        send.call(this)
+
       }else{
         this.errors.push(this.$t('msg.finalize.WrongFileType'))
       }

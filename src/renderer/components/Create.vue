@@ -21,7 +21,11 @@
               
           <div v-else class="column is-8" >
             <!--<img src="../assets/logo.png" style="width:64px" class="is-pulled-left">-->
-            <h2 class="title" style="margin-top: 24px; margin-left:70px" >{{ $t("msg.title") }}</h2>
+            
+            <h2 class="title" style="margin-top: 24px; margin-left:70px" >
+              {{ $t("msg.title") }}
+              <span style="font-size:0.75rem">v{{version}}</span>
+            </h2>
 
             <div class="message is-primary is-small">
               <div class="message-header">
@@ -69,6 +73,8 @@
 
 <script>
 import { messageBus } from '@/messagebus'
+import {version} from '../../shared/config'
+
 const { exec } = require('child_process')
 
 export default {
@@ -81,7 +87,8 @@ export default {
       walletCreating: false,
       error: false,
       errorInfo: '',
-      seeds: []
+      seeds: [],
+      version: version 
     }
   },
   created(){

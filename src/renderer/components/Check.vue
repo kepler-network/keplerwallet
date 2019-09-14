@@ -61,6 +61,7 @@
 import { messageBus } from '@/messagebus'
 import Message from '@/components/Message'
 import { setTimeout } from 'timers';
+import {keplerNode2, keplerLocalNode} from '../../shared/config'
 
 export default {
   name: "check",
@@ -93,7 +94,14 @@ export default {
     start(){
       this.checking = true
       this.checked = false
-      this.$walletService.check(this.updateOutput)
+      let gnode = keplerNode2
+      let localGnodeStatus = this.$dbService.getLocalGnodeStatus()
+      this.$log.debug('check kepler local status before check balance: ' + localGnodeStatus)
+      if( localGnodeStatus == 'running'){
+        this.$log.debug('check use kepler local node')
+        gnode = keplerLocalNode
+      }
+      this.$walletService.check(this.updateOutput, gnode)
     },
 
     stop(){

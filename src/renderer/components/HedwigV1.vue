@@ -73,7 +73,7 @@
 import {fork} from 'child_process'
 
 import { messageBus } from '@/messagebus'
-import {hedwigServer, hedwigClient, hedwigApp} from '../../shared/config'
+import {hedwigServer, hedwigClient, hedwigApp, keplerNode, keplerLocalNode} from '../../shared/config'
 import { setTimeout } from 'timers';
 const clipboard = require('electron').clipboard
 
@@ -118,13 +118,15 @@ export default {
   },
   methods: {
     start(){
+      let gnode = keplerNode
+      if(this.$dbService.getGnodeLocation() == 'local')gnode=keplerLocalNode
       if(!this.starting&&!this.internetReachable){
         this.starting = true
         
         this.$log.debug('Is local reachable before start? '+ this.localReachable)
         this.checklocalReachable().catch((error)=>{
           if(!error.response){
-            this.$walletService.startListen()
+            this.$walletService.startListen(gnode)
           }
           this.localReachable = true
           this.$log.debug('Http listen is locally reachable.')
@@ -243,8 +245,10 @@ export default {
           this.$log.debug(`Try to test internet reachalbe: ${url2} ?`)
           this.$http.get(url2, {timeout: 10000}).catch((error)=>{
             this.$log.debug(`connect ${url2} return: ${error}`)
-            let resp = error.response      
-            this.$log.error(`resp.data:${resp.data}; status:${resp.status};headers:${resp.headers}`)
+            let resp = error.response
+            if(resp.data){
+              this.$log.error(`resp.data:${resp.data}; status:${resp.status};headers:${resp.headers}`)
+            }
             if(resp.status==404){
               this.internetReachable = true
               this.$log.debug('hedwig succesful with url: '+ this.address)

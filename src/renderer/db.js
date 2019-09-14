@@ -1,6 +1,9 @@
 
 let keyPostedUnconfirmed = 'posted_unconfirmed_txs'
 let keySpendable = 'spendable'
+let keyLocalGnodeStatus = 'local_gnode_status'
+let keyGnodeLocation = 'local_gnode_location'
+let keyLocalGnodeCheckable = 'local_gnode_checkable'
 
 class DBService{
     static getPostedUnconfirmedTxs(){
@@ -39,6 +42,29 @@ class DBService{
         return localStorage.setItem(keySpendable, amount)
     }
 
+    static setLocalGnodeStatus(status){
+        return localStorage.setItem(keyLocalGnodeStatus, status)
+    }
+
+    static getLocalGnodeStatus(){
+        return localStorage.getItem(keyLocalGnodeStatus)
+    }
+
+    static setGnodeLocation(location){
+        return localStorage.setItem(keyGnodeLocation, location)
+    }
+
+    static getGnodeLocation(){
+        return localStorage.getItem(keyGnodeLocation)
+    }
+
+    static setLocalGnodeCheckable(checkable){
+        return localStorage.setItem(keyLocalGnodeCheckable, JSON.stringify(checkable))
+    }
+
+    static getLocalGnodeCheckable(){
+        return JSON.parse(localStorage.getItem(keyLocalGnodeCheckable))
+    }     
 }
 
 export default DBService

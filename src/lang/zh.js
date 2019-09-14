@@ -2,7 +2,7 @@ const messages = {
   msg: {
     title: 'KEPLER 钱包',
     password: '密码',
-    passwordAgain: '再次输入密码',
+    wrongPassword: 'Kepler owner Api进程启动失败，可能是密码错误',
     wrongPassword: '密码错误',
     login_: '登录',
     logout: '登出',
@@ -23,11 +23,29 @@ const messages = {
     msg: '消息',
     more: '更多',
     back: '返回',
+    remote: '远程',
+
+    local: '本地',
+
+    node: '节点',
+    remoteNode: '远程节点',
+    localNode: '本地节点',
+
+    other: '其他',
 
     login: {
       walletExist: '发现已有kepler钱包存在；请用原有的密码登陆吧 :-)',
     },
 
+    remove:{
+      title: '移除当前钱包',
+      warning: '警告 !',
+      info: '移除钱包前，请确认 当前钱包里已经没有kepler 或者 你已经完整记录了当前钱包的助记词 !',
+      help: '在下面输入框填入 “移除” 用于确认',
+      remove: '移除钱包',
+      success: '当前钱包已经移除，请重启Niffler'
+    },
+      
     new_:{
       create: '新建钱包',
       restore: '通过助记词导入钱包',
@@ -80,6 +98,8 @@ const messages = {
     info:{
       spendable: '可用余额',
       total: '总计',
+      unfinalization: '等待对方完成',
+      immature: '未成熟'
     },
 
     txs:{
@@ -105,7 +125,8 @@ const messages = {
       createTxFile: '生成交易文件',
       WrongAmount: '发送数量错误',
       saveMsg: '保存新生成的交易文件',
-      CreateFailed: '生成交易文件错误'
+      CreateFailed: '生成交易文件错误',
+      NotEnough: '没有足够的余额，请至少留下0.01作为手续费',
     },
 
     httpSend:{
@@ -198,7 +219,46 @@ const messages = {
       title: '选择语言',
       lang: '语言',
       select: '选择'
-    }
+    },
+
+    gnode:{
+      title: '本地Kepler节点',
+      tabStatus: '运行状态',
+      tabPeers: '周边节点',
+      tabLog: '运行日志',
+      tabConfig: '设置',
+      statusRunning: '运行中,可用',
+      statusSyncing: '正在同步区块 ... 不可用',
+      statusToStart: '没有启动',
+      status:'状态',
+      localRemoteHeight: '本地节点高度/全网高度',
+      nodeVersion: '节点版本',
+      protocolVersion: '协议版本',
+      connectedCount: '已连接到周边Kepler节点数量',
+      location: '区块数据存储的位置',
+      size: '全节点区块数据大小',
+      restart: '重启本地节点',
+      height: '最新高度'
+    },
+       
+         gnodeConfig:{
+           warning: '普通用户推荐使用默认值 !',
+           useLocalorNot: '(推荐)启用本地节点',
+           connectMethod: '节点连接方式',
+           remoteFirst: '(推荐)优先使用远程. 当远程节点不可用, 使用本地节点',
+           localFirst:  '当本地节点同步完成时优先连接本地, 否则使用远程',
+           remoteAllTime: '始终连接远程节点',
+           localAllTime: '始终连接本地节点',
+           background: '(推荐)钱包退出后，本地节点后台运行',
+           restoreToDefault: '恢复默认值',
+           saved: '设置已经保存, 重启钱包后生效.'
+         },
+      
+         gnodeConfigModal:{
+           config: '设置Kepler本地节点',
+           title: '设置Kepler节点'
+         }
+      
 
   }
 }

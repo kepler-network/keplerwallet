@@ -4,7 +4,9 @@
       <div class="container">
         <div class="columns is-mobile is-centered">
           <div class="column is-6" >
-            <h2 class="title is-size-3 has-text-weight-bold" style="margin-top: 24px; margin-left:8px;" >{{ $t("msg.title") }}</h2>              
+            <h2 class="title" style="margin-top: 24px; margin-left:70px" >{{ $t("msg.title") }}
+                <span class="is-pulled-right" style="font-size:0.65rem">v{{version}}</span>
+            </h2>
             <div class="column">
                 <a class="button is-info" @click="current='create'">
                 {{ $t("msg.new_.create") }}</a>
@@ -29,6 +31,7 @@
 import { messageBus } from '@/messagebus'
 import Create from '@/components/Create'
 import Restore from '@/components/Restore'
+import {version} from '../../shared/config'
 
 export default {
   name: "new",
@@ -38,7 +41,8 @@ export default {
   },
   data() {
     return {
-      current:'new'
+      current: 'new',
+      version: version
     }
   },
   created(){

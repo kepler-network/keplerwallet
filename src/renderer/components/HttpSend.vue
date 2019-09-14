@@ -10,7 +10,7 @@
     <section class="modal-card-body" style="height:380px;">
       
       <div class="notification is-primary" v-if="errors.length">
-        <p v-for="error in errors">{{ error }}</p>
+        <p v-for="error in errors" :key="error.id">{{ error }}</p>
       </div>
       <div v-if="!sent">
         <div class="field">
@@ -25,23 +25,6 @@
             <input class="input" type="text" v-model="amount" placeholder="1 Ҝ">
           </div>
         </div>
-
-        <div class="field">
-        <label class="label">{{ $t("msg.httpSend.salteVersion") }}</label>
-
-          <div class="control">
-            <div class="select">
-              <select v-model="slateVersion">
-                <option>0</option>
-                <option>1</option>
-                <option>2</option>
-              </select>
-            </div>
-          </div>
-          <p class="help"> {{ $t("msg.httpSend.salteVersionHelp") }}</p>
-
-        </div>
-
         <br/>
         <div class="field is-grouped">
           <div class="control">
@@ -117,9 +100,9 @@ export default {
     enough(amount){
       let spendable = this.$dbService.getSpendable()
       if(spendable){
-        return spendable > parseFloat(amount) + 0.01 //0.008
+        return spendable >= parseFloat(amount) + 0.01 //0.008
       }
-      return true
+      return false
     },
     checkForm(){
       this.errors = []
@@ -129,108 +112,55 @@ export default {
       if (!this.amount || !this.validAmount(this.amount)) {
         this.errors.push(this.$t('msg.httpSend.WrongAmount'));
       }
-      if (this.validAmount(this.amount) && !this.enough(this.amount)) {
+      if (this.amount&&this.validAmount(this.amount) && !this.enough(this.amount)) {
         this.errors.push(this.$t('msg.httpSend.NotEnough'));
       }
       if (!this.errors.length) {
         return true;
       }
     },
-    send(){
+    send2(){
       if(this.checkForm()&&!this.sending){
         let tx_id
         this.sending = true
+
         let tx_data = {
+          "src_acct_name": null,
           "amount": this.amount * 1000000000, 
           "minimum_confirmations": 10,
-          "method": "http",
-          "dest": this.address,
           "max_outputs": 500,
           "num_change_outputs": 1,
           "selection_strategy_is_use_all": true,
-          "target_slate_version": parseInt(this.slateVersion)
-        }
-        
-        let send = async function(){
-          try{
-            let res = await this.$walletService.issueSendTransaction(tx_data)
-            tx_id = res.data.id
-            this.$log.debug(`issue tx ${tx_id} ok; return:${res.data}`)
-            let res2 = await this.$walletService.postTransaction(res.data, true)
-            this.sent = true
-            this.$dbService.addPostedUnconfirmedTx(tx_id)
-            this.$log.debug(`httpsend post tx ok; return:${res2.data}`)
-          }catch(error){
-            this.$log.error('http send error:' + error)   
-            if (error.response) {   
-              let resp = error.response      
-              this.$log.error(`resp.data:${resp.data}; status:${resp.status};headers:${resp.headers}`)
-            }
-            this.errors.push(this.$t('msg.httpSend.TxFailed'))
-          }finally{
-            this.sending = false
-            messageBus.$emit('update')
+          "target_slate_version": null,
+          "send_args": {
+            "method": "http",
+            "dest": this.address,
+            "finalize": true,
+            "post_tx": true,
+            "fluff": true
           }
         }
-        send.call(this)
-      }
-    },
-    send2(){
-      if(this.$walletService.passwordUndefined()){
-        this.$log.debug('Use send1.')
-        return this.send()
-      }
-      if(this.checkForm()&&!this.sending){
-        let tx_id
-        this.sending = true
-        let send2Async = async function(){
-          try{
-            const slate = await this.$walletService.createSlate(this.amount, 1)
+
+        this.$walletService.issueSendTransaction(tx_data).then(
+          (res) => {
+            this.$log.debug('send2 issueSendTransaction return: '+ res)
+            let slate = res.data.result.Ok
             tx_id = slate.id
-            if(!tx_id){
-              this.errors.push(this.$t('msg.httpSend.TxCreateFailed'))
-            }else{
-              let url = urljoin(this.address, '/v1/wallet/foreign/receive_tx')
-              this.$log.debug('http send to: ' + url)
-              const res = await urllib.request(url, {
-                method: 'post',
-                //contentType: "application/json",
-                contentType: '',
-                dataType: 'json',
-                timeout: '10s',
-                content: JSON.stringify(slate),
-                //data:JSON.stringify(slate),
-                //headers: {
-                //   'User-Agent': 'kepler-client',
-                //'transfer-encoding': ''
-                //},
-              });
-              if (res && res.data && res.data.id === tx_id) {
-                this.$log.debug(`post transaction ok, start to finalize transaction ${tx_id}`);
-                let result = await this.$walletService.finalizeSlate(res.data)
-                this.sent = true
-                this.$dbService.addPostedUnconfirmedTx(tx_id)
-                this.$log.debug(`httpsend post tx ok; return:${JSON.stringify(result)}`)
-              }else{
-                this.$log.debug('post transaction return bad response: ' + JSON.stringify(res))
-                this.errors.push(this.$t('msg.httpSend.TxResponseFailed'))
-              }
-            }
-          }catch(error){
-            this.$log.error('http send error:' + error)  
+            this.sent = true
+            this.$dbService.addPostedUnconfirmedTx(tx_id)
+          }).catch((error) => {
+            this.$log.error('http send2 error:' + error)  
             this.$log.error(error.stack)
             if (error.response) {   
               let resp = error.response      
               this.$log.error(`resp.data:${resp.data}; status:${resp.status};headers:${resp.headers}`)
             }
             this.errors.push(this.$t('msg.httpSend.TxFailed'))
-          }finally{
+          }).finally(()=>{
             this.sending = false
             messageBus.$emit('update')
-          }
+          })
         }
-        send2Async.call(this)
-      }
     },
     closeModal() {
       this.clearup()
