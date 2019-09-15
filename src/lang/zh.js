@@ -2,6 +2,7 @@ const messages = {
   msg: {
     title: 'KEPLER 钱包',
     password: '密码',
+    passwordAgain: '再次输入密码',
     wrongPassword: 'Kepler owner Api进程启动失败，可能是密码错误',
     wrongPassword: '密码错误',
     login_: '登录',

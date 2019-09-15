@@ -88,6 +88,7 @@ export default {
         this.$log.debug('Got walletCheckFinished message.')
         this.checking = false
         this.checked = true
+        messageBus.$emit('update')
       })
   },
   methods: {
@@ -119,7 +120,7 @@ export default {
 
     closeModal() {
       if(!this.checking)this.clearup()
-      messageBus.$emit('close', 'windowCheck');
+      messageBus.$emit('close', 'windowCheck')
     },
     
     clearup(){

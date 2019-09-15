@@ -59,7 +59,7 @@ export const chainDataPath = path.join(APP.getPath('home'), '.kepler', chainType
 
 export const configPath = path.join(kwPath, 'config.json')
 
-export const releaseUrl = 'https://api.github.com/repos/xiaojay//keplerwallet/releases/latest'
+export const releaseUrl = 'https://api.github.com/repos/xiaojay/keplerwallet/releases/latest'
 export const downloadUrl = 'https://github.com/xiaojay/keplerwallet/releases/latest'
 
 export function getConfig(){

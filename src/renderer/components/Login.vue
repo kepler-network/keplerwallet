@@ -5,7 +5,7 @@
         <div class="columns is-mobile is-centered">
           <div class="column is-6" >
               <h2 class="title" style="margin-top:24px; margin-left:5px;font-size:1.75rem" >{{ $t("msg.title") }}
-              <span class="is-pulled-right" style="font-size:0.8rem;margin-right:15px;">v{{version}}</span>
+              <span class="is-pulled-right" style="font-size:0.8rem;">v{{version}}</span>
               </h2>
           </div>
         </div>
