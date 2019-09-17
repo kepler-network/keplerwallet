@@ -114,7 +114,7 @@ export default {
         this.starting = true
         this.checklocalReachable().catch((error)=>{
           if(!error.response){
-            this.$walletService.startListen()
+            this.$walletService.startListen(gnode)
           }
           this.$log.debug('Http listen is locally reachable.')
           this.$log.debug('checkRunning right now.')
