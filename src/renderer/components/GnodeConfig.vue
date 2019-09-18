@@ -10,7 +10,7 @@
       <label class="label" style="margin-top:17.5px">{{ $t("msg.node") }}:</label>
       <div class="field is-horizontal">
           <div class="field-label is-normal">
-              <span style="font-size:0.88rem">{{ $t("msg.localNode") }}</span>:
+              <span style="font-size:0.85rem">{{ $t("msg.localNode") }}</span>:
           </div>
           <div class="field-body">
               <div class="field">
@@ -22,7 +22,7 @@
       </div>
       <div class="field is-horizontal">
           <div class="field-label is-normal">
-              <span style="font-size:0.88rem">{{ $t("msg.remoteNode") }}</span>:
+              <span style="font-size:0.85rem">{{ $t("msg.remoteNode") }}</span>:
           </div>
           <div class="field-body">
               <div class="field">
@@ -51,7 +51,7 @@
           </label>
       </div>
       <label class="label" style="margin-top:17.5px">{{ $t("msg.other") }}:</label>
-      <label class="checkbox" style="font-size:0.88rem">
+      <label class="checkbox" style="font-size:0.85rem">
       <input type="checkbox" v-model="background">
         {{ $t("msg.gnodeConfig.background") }}
       </label>
