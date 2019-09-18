@@ -22,9 +22,9 @@
           <div v-else class="column is-8" >
             <!--<img src="../assets/logo.png" style="width:64px" class="is-pulled-left">-->
             
-            <h2 class="title" style="margin-top: 24px; margin-left:70px" >
+            <h2 class="title" style="margin-top: 24px;" >
               {{ $t("msg.title") }}
-              <span style="font-size:0.75rem">v{{version}}</span>
+              &nbsp;&nbsp;<span style="font-size:0.8rem">v{{version}}</span>
             </h2>
 
             <div class="message is-primary is-small">

@@ -4,8 +4,8 @@
       <div class="container">
         <div class="columns is-mobile is-centered">
           <div class="column is-6" >
-            <h2 class="title" style="margin-top: 24px; margin-left:70px" >{{ $t("msg.title") }}
-                <span class="is-pulled-right" style="font-size:0.65rem">v{{version}}</span>
+            <h2 class="title" style="margin-top: 24px; margin-left:10px" >{{ $t("msg.title") }}
+                <span class="is-pulled-right" style="font-size:0.8rem">v{{version}}</span>
             </h2>
             <div class="column">
                 <a class="button is-info" @click="current='create'">
