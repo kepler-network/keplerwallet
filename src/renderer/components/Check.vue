@@ -88,7 +88,7 @@ export default {
         this.$log.debug('Got walletCheckFinished message.')
         this.checking = false
         this.checked = true
-        messageBus.$emit('update')
+        messageBus.$emit('update', true)
       })
   },
   methods: {
@@ -102,7 +102,7 @@ export default {
         this.$log.debug('check use kepler local node')
         gnode = keplerLocalNode
       }
-      this.$walletService.check(this.updateOutput, gnode)
+      this.$walletService.check(this.updateOutput, gnode, null)
     },
 
     stop(){

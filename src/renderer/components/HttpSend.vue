@@ -131,7 +131,10 @@ export default {
           "max_outputs": 500,
           "num_change_outputs": 1,
           "selection_strategy_is_use_all": true,
+          "message": null,
           "target_slate_version": null,
+          "payment_proof_recipient_address": null,
+          "ttl_blocks": null,
           "send_args": {
             "method": "http",
             "dest": this.address,
@@ -158,7 +161,7 @@ export default {
             this.errors.push(this.$t('msg.httpSend.TxFailed'))
           }).finally(()=>{
             this.sending = false
-            messageBus.$emit('update')
+            messageBus.$emit('update', true)
           })
         }
     },

@@ -109,7 +109,7 @@ export default {
             this.errors.push(this.$t('msg.finalize.TxFailed'))
           }finally{
             this.isSending = false
-            messageBus.$emit('update')
+            messageBus.$emit('update', true)
           }
         }
 

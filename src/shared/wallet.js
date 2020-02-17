@@ -7,7 +7,11 @@ import axios from 'axios'
 require('promise.prototype.finally').shim();
 
 import log from './logger'
-import {platform, keplerWalletPath, seedPath, keplerNode, keplerNode2, chainType, apiSecretPath, walletTOMLPath, walletPath, grinRsWallet, nodeExecutable, tempTxDir, gnodeOption} from './config'
+
+import {platform, keplerWalletPath, seedPath, keplerNode, keplerNode2, chainType, 
+    nodeApiSecretPath, ownerApiSecretPath, walletTOMLPath, walletPath, walletConfigPath,
+    tempTxDir, gnodeOption} from './config'
+
 import { messageBus } from '../renderer/messagebus'
 import GnodeService from './gnode'
 import dbService from '../renderer/db'
@@ -16,7 +20,7 @@ let ownerAPI
 let listenProcess
 let checkProcess
 //let initRProcess
-let restoreProcess
+let infoProcess
 let processes = {}
 let client
 let password_
@@ -53,15 +57,17 @@ function addQuotations(s){
 }
 class WalletService {
     static initClient() {
-        if(fs.existsSync(apiSecretPath)){
+        if(fs.existsSync(ownerApiSecretPath)){
             client = axios.create({
                 baseURL: walletHost,
                 auth: {
                     username: 'kepler',
-                    password: fs.readFileSync(apiSecretPath).toString()
+                    password: fs.readFileSync(ownerApiSecretPath).toString()
                 },
             })
-        }
+        }else{
+            client = axios.create({baseURL: walletHost})
+        }	        
     }
     
     static setPassword(password){
@@ -92,7 +98,13 @@ class WalletService {
             return WalletService.jsonRPC('node_height', [], false)
         }
     }
-    
+
+    static getAccounts(){
+        if(client){
+            return WalletService.jsonRPC('accounts', [], false)
+        }
+    }
+
     static getSummaryInfo(minimum_confirmations){
         return WalletService.jsonRPC('retrieve_summary_info', [true, minimum_confirmations], false)
     }
@@ -209,6 +221,10 @@ class WalletService {
         return fs.existsSync(seedPath)?true:false
     }
 
+    static isWalletConfigExist(){
+        return fs.existsSync(walletConfigPath)?true:false
+    }
+
     static new(password){
         const cmd = platform==='win'? `${keplerWalletPath} --pass ${addQuotations(password)} init`:
                                       `${keplerWalletPath} init`
@@ -271,70 +287,21 @@ class WalletService {
         fs.writeFileSync(fn, JSON.stringify(slate))
         return WalletService.finalize(fn)
     }
-
-    static recover(seeds, password){
-        if(platform==='win'){
-            return  WalletService.recoverOnWindows(seeds, password)
-        }
-        let rcProcess
-        let args = ['--node_api_http_addr', keplerNode, 'node_api_secret_path', path.resolve(apiSecretPath),
-            '--wallet_dir', path.resolve(walletPath), '--seeds', seeds,
-            '--password', password]
-        try{
-            rcProcess = fork(grinRsWallet, args)
-        }catch(e){
-            return log.error('Error during fork to recover: ' + e )
-        }
-        rcProcess.on('message', (data) => {
-            let ret = data['ret']
-            log.debug('Recover message: ' + ret)
-            messageBus.$emit('walletRecoverReturn', ret)
-        });
-          
-        rcProcess.on('error', (err) => {
-            log.error(`Recover stderr: ${err}`);
-          });
-          
-        rcProcess.on('exit', (code, sginal) => {
-            log.debug(`Recover exit: ${code}`);
-        });
-    }
-
-    static recoverOnWindows(seeds, password){
-        let args = [grinRsWallet, '--node_api_http_addr', keplerNode2,
-            '--node_api_secret_path', path.resolve(apiSecretPath),
-            '--wallet_dir', path.resolve(walletPath), 
-            '--seeds', seeds, '--password', password]
-        let rcProcess = spawn(nodeExecutable, args)
-        rcProcess.stdout.on('data', function(data){
-            let output = data.toString().trim()
-            log.debug('rcProcess stdout:', output)
-            let msg
-            if(output ==='success'){
-                msg = 'ok'
-            }else if(output ==='"BIP39 Mnemonic (word list) Error"'){
-                msg = 'invalidSeeds'
-            }else{
-                msg = data
-            }
-            log.debug('msg', msg)
-            messageBus.$emit('walletRecoverReturn', msg)
-        })
-        rcProcess.stderr.on('data', function(data){
-            let output = data.toString()
-            log.debug('rcProcess stderr:', output)
-        })
-    }
-
-    static check(cb, gnode){
+    
+    static check(cb, gnode, password){
         let kepler = keplerWalletPath
         if(platform==='win'){
             kepler = keplerWalletPath.slice(1,-1)
         }
-        checkProcess = spawn(kepler, ['-r', gnode, '-p', password_, 'check', '-d']);
+        if(password){
+            checkProcess = spawn(kepler, ['-r', gnode, '-p', password, 'scan', '-d'])
+        }else{
+            checkProcess = spawn(kepler, ['-r', gnode, '-p', password_, 'scan', '-d'])
+        }
         let ck = checkProcess
         processes['check'] = checkProcess
         localStorage.setItem('checkProcessPID', checkProcess.pid)
+        messageBus.$emit('scaning')
 
         ck.stdout.on('data', function(data){
             let output = data.toString()
@@ -345,34 +312,41 @@ class WalletService {
             cb(output)
         })
         ck.on('close', function(code){
+            messageBus.$emit('scaned')
             log.debug('kepler wallet check exists with code: ' + code);
             if(code==0){return messageBus.$emit('walletCheckFinished')}
         });
     }
 
-    static restore(password, cb){
+    static info(cb, gnode, password){
         let kepler = keplerWalletPath
         if(platform==='win'){
             kepler = keplerWalletPath.slice(1,-1)
         }
-        restoreProcess = spawn(kepler, ['-r', keplerNode2, '-p', password, 'restore']);
-        let rs = restoreProcess
-        processes['restore'] = restoreProcess
-        localStorage.setItem('restoreProcessPID', restoreProcess.pid)
-        
-        log.debug('kepler wallet restore process running with pid: ' + restoreProcess.pid);
+        if(password){
+            infoProcess = spawn(kepler, ['-r', gnode, '-p', password, 'info'])
+        }else{
+            infoProcess = spawn(kepler, ['-r', gnode, '-p', password_, 'info'])
+        }
+        log.debug('kepler wallet using kepler node: ' + gnode );
+        let info = infoProcess
+        processes['info'] = infoProcess
+        localStorage.setItem('infoProcessPID', infoProcess.pid)
 
-        rs.stdout.on('data', function(data){
+        info.stdout.on('data', function(data){
             let output = data.toString()
             cb(output)
         })
-        rs.stderr.on('data', function(data){
+        info.stderr.on('data', function(data){
             let output = data.toString()
+            log.debug('error for kepler-wallet info:' + data)
             cb(output)
         })
-        rs.on('close', function(code){
-            log.debug('kepler wallet restore exists with code: ' + code);
-            if(code==0){return messageBus.$emit('walletRestored')}
+        info.on('close', function(code){
+            log.debug('kepler wallet info exits with code: ' + code);
+            if(code==0){messageBus.$emit('walletInfoFinished')}else{
+                messageBus.$emit('walletInfoFailed')
+            }
         });
     }
 
@@ -398,6 +372,14 @@ class WalletService {
             }
         }
     }
+    static killKeplerWallet(){
+        if(platform!=='win'){
+            exec('pkill kepler-wallet')
+        }else{
+            exec('taskkill -f /im kepler-wallet.exe')
+        }
+    }
 }
+
 WalletService.initClient()
 export default WalletService

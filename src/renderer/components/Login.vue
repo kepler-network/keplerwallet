@@ -32,7 +32,7 @@
                 </div>
             
                 <div class="field">
-                  <button class="button is-info" @click.prevent="tryLogin">
+                  <button class="button is-link" @click.prevent="tryLogin" :class="{'is-loading': logining }">
                     {{ $t("msg.login_") }}
                   </button>
                 </div>
@@ -54,7 +54,7 @@ import {isFirstTime} from '../../shared/first'
 import Remove from '@/components/Remove'
 import GnodeConfigModal from '@/components/GnodeConfigModal'
 
-import {version, keplerNode, gnodeOption, keplerNode2, keplerLocalNode} from '../../shared/config'
+import {version, keplerNode, gnodeOption, keplerNode2, keplerLocalNode, platform} from '../../shared/config'
 
 export default {
   name: "login",
@@ -69,7 +69,8 @@ export default {
       error: false,    
       openRemove: false,
       openGnodeConfig:false,
-      version: version
+      version: version,
+      logining: false
     }
   },
   created(){
@@ -82,13 +83,17 @@ export default {
   },
   methods: {
     tryLogin(){
-      
+      if(this.logining)return
+      this.logining = true
+
       let setPassword = this.$walletService.setPassword
       let password = this.password
 
       this.resetErrors()
       this.$walletService.initClient()
-      let selectGnode = async function(){
+      let selectGnodeAndLogin = async function(){
+        setTimeout(()=>this.checkLogin(), 2500)
+
         let localHeight
         let remoteHeight
         this.$log.debug('Time to select gnode.')
@@ -119,7 +124,7 @@ export default {
                   let peersCount = parseInt(res.data.connections)
                   this.$log.debug('local node height is ' + localHeight)
                   this.$log.debug('local node peers count is ' + peersCount)
-                  if(localHeight + 60 >= remoteHeight && peersCount >= 6){
+                  if(localHeight + 60 >= remoteHeight && peersCount >= 3){
                     this.$log.debug('use local kepler node.')
                     this.$dbService.setGnodeLocation('local')
                     return this.$walletService.startOwnerApi(this.password, keplerLocalNode)
@@ -141,21 +146,30 @@ export default {
           })
         }
       }
-      setTimeout(()=>selectGnode.call(this), 50)
-      setTimeout(()=>{
-        this.$log.debug('check owner api process after try to login')
-        this.$walletService.getNodeHeight().then(
-          (res) =>{
-            setPassword(password)
-            messageBus.$emit('logined')
-           
-          }).catch((error) => {
-            return this.error = true
-        })}, 1250)
+      setTimeout(()=>selectGnode.call(this), 800)
       this.resetErrors()
       },
     resetErrors(){
       this.error = false;
+    },
+    checkLogin(){
+      this.$log.debug('check owner api process after try to login')
+      this.$walletService.getAccounts().then(
+        (res) =>{
+          //this.$log.debug('getAccounts return:' + JSON.stringify(res.data))
+          if(res.data.result.Ok){
+            this.$log.debug('owner api process started')
+            this.$walletService.setPassword(this.password)
+            messageBus.$emit('logined')
+          }else{
+            return this.error = true
+          }
+        }).catch((error) => {
+          this.$log.error('check owner api process got error:', error)
+          return this.error = true
+      }).finally(()=>{
+            this.logining = false
+      })
     }
   }
 }

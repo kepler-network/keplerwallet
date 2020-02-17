@@ -32,6 +32,7 @@ import { messageBus } from '@/messagebus'
 import Create from '@/components/Create'
 import Restore from '@/components/Restore'
 import {version} from '../../shared/config'
+import walletServiceV3 from '../../shared/walletv3'
 
 export default {
   name: "new",
@@ -49,6 +50,17 @@ export default {
     messageBus.$on('backToNew', ()=>{
       this.current = 'new'
     })
+    if(!this.$walletService.isExist()){
+      walletServiceV3.startOwnerApi()
+      setTimeout(
+        ()=>{
+          this.$walletService.initClient()
+          walletServiceV3.initClient()
+          walletServiceV3.initSharedSecret()
+        },
+        1500
+      )
+    }
   }
 }
 </script>

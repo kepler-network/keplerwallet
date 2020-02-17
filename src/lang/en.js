@@ -31,6 +31,7 @@ const messages = {
     remoteNode: 'Remote node',
     localNode: 'Local node',
     other: 'Others',
+    loading: 'Updating status from Kepler node ...',
 
     login: {
       walletExist: 'Found kepler wallet data exists; login with original password :-)',
@@ -49,7 +50,7 @@ const messages = {
       toNewMsg: 'No wallet exists Found. Create a New One.',
       newWallet: 'Create new wallet',
       backupNote: 'Import！Please backup your seed phrase to restore your wallet',
-      backupFinish: 'Ok, I backed up my seed phrase. Login my wallet',
+      backupFinish: 'Ok, I backed up my seed phrase. Close wallet, then open it again',
       errorPasswdEmpty: 'Password cannot be empty',
       errorPasswdConsistency: 'Please enter the same password',
       errorCreateFailed: 'Error when try to create new wallet. Maybe restart wallet and Try it later.',
@@ -67,15 +68,16 @@ const messages = {
       addSeedsInfo: 'Add seed phrase one by one please',
       add: 'Add',
       invalid: 'Invalid Seed Phrase',
+      failed: 'Recover wallet from seeds failed',
       delete: 'Delete',
       added: 'Finish enter seed phrase',
       newPassword: 'Set a new password',
       recover: 'Recover',
       reAdd: 'Re-enter seed phrase ',
       recovered: 'Wallet recovered, it is time to check balance from kepler blockchain',
-      restoring: 'It will take 10-30 minites to finish check. Be patient ......',
+      restoring: 'It will take 10-30 minutes to finish check. Be patient ......',
       restored: 'Wallet recovered and balance checked.',
-      login: 'Login Wallet',
+      login: 'Close Wallet, then Open it again to Login',
     },
 
     app:{
@@ -201,7 +203,7 @@ const messages = {
       checking: 'Checking, be patient ...',
       stop: 'Stop Check',
 
-      tip:'It will take 10-30 minites to finish check',
+      tip:'It will take 10-30 minutes to finish check',
       introTitle: 'Introduction',
 
       intro1: 'Because of all of the possibilities listed in the cancel command, as well as the possibility of forks, it is quite possible for your wallet to end up in an inconsistent state',
@@ -225,7 +227,7 @@ const messages = {
       tabConfig: 'Settings',
       statusRunning: 'Running, Available',
       statusSyncing: 'Syncing ...',
-      statusToStart: 'not Runing',
+      statusToStart: 'not Running',
       status:'Status',
       localRemoteHeight: 'Local Height/Networking Height',
       nodeVersion: 'Node Version',
@@ -241,11 +243,11 @@ const messages = {
       warning: 'For General users, default setting is preferred!',
       useLocalorNot: '(Recommend)Use local  kepler node',
       connectMethod: 'Connect Method',
-      remoteFirst: '(Recommend)Remote kepler node is preferred, When remote node is not available, use local node.',
-      localFirst:  'Local kepler node is preferred when it is synced. Otherwise, use remote node.',
+      remoteFirst: 'Remote kepler node is preferred, When remote node is not available, use local node.',
+      localFirst:  '(Recommend)Local kepler node is preferred when it is synced. Otherwise, use remote node.',
       remoteAllTime: 'Use remote all the time',
       localAllTime: 'Use local all the time',
-      background: '(Recommend)Runing kepler node background when KeplerWallet is closed.',
+      background: '(Recommend)Running kepler node background when KeplerWallet is closed.',
       restoreToDefault: 'Restore to default setting',
       saved: 'Settings was saved, Restart KeplerWallet to take effect.'
     },

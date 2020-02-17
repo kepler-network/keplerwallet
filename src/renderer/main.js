@@ -4,6 +4,7 @@ import VueI18n from 'vue-i18n'
 
 import App from './App'
 import 'bulmaswatch/superhero/bulmaswatch.min.css'
+import 'bulma-pageloader/dist/css/bulma-pageloader.min.css'
 
 import 'animate.css/animate.css'
 import { remote, ipcRenderer} from 'electron'

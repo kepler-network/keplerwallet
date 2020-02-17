@@ -5,7 +5,8 @@ import axios from 'axios'
 require('promise.prototype.finally').shim();
 
 import log from './logger'
-import {gnodeOption, keplerPath, apiSecretPath, nodeTOMLPath, platform, keplerNode} from './config'
+import {gnodeOption, keplerPath, nodeApiSecretPath, nodeTOMLPath, platform, keplerNode} from './config'
+
 import { messageBus } from '../renderer/messagebus'
 
 let client
@@ -41,15 +42,17 @@ function enableArchiveMode(){
 
 class GnodeService {
     static initClient() {
-        if(fs.existsSync(apiSecretPath)){
+        if(fs.existsSync(nodeApiSecretPath)){
             client = axios.create({
                 baseURL: gnodeHost,
                 auth: {
                     username: 'kepler',
-                    password: fs.readFileSync(apiSecretPath).toString()
+                    password: fs.readFileSync(nodeApiSecretPath).toString()
                 },
             })
-        }
+        }else{
+            client = axios.create({baseURL: gnodeHost})
+        }	        
     }
     static getStatus(){
         return client.get('/v1/status')
@@ -109,7 +112,7 @@ class GnodeService {
 
     static restartGnode(){
         GnodeService.stopGnode2()
-        setTimeout(()=>GnodeService.startGnode(), 2500)
+        setTimeout(()=>GnodeService.startGnode(), 2000)
     }
 }
 GnodeService.initClient()

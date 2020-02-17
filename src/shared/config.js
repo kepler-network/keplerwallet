@@ -42,6 +42,27 @@ if(platform=='win'){
   keplerPath = '"' + path.resolve(keplerPath) + '"' 
   keplerWalletPath = '"' + path.resolve(keplerWalletPath) + '"' 
 }
+
+function getOwnerApiSecret(){
+  if(fs.existsSync(walletTOMLPath)){
+      const re = /api_secret_path\s*=\s*"(.\S+)"/
+      let c = fs.readFileSync(walletTOMLPath).toString()
+      const found = c.match(re)
+      if(found)return found[1]
+  }
+  return path.join(APP.getPath('home'), '.kepler', chainType, '.owner_api_secret')
+}
+
+function getNodeApiSecret(){
+  if(fs.existsSync(nodeTOMLPath)){
+      const re = /api_secret_path\s*=\s*"(.\S+)"/
+      let c = fs.readFileSync(nodeTOMLPath).toString()
+      const found = c.match(re)
+      if(found)return found[1]
+  }
+  return path.join(APP.getPath('home'), '.kepler', chainType, '.api_secret')
+}
+
 export const chainType = 'main'
 export const keplerDIR = path.join(APP.getPath('home'), '.kepler')
 export const seedPath = path.join(APP.getPath('home'), '.kepler', chainType, 'wallet_data/wallet.seed')
@@ -49,8 +70,10 @@ export const nodeTOMLPath = path.join(APP.getPath('home'), '.kepler', chainType,
 export const walletTOMLPath = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-wallet.toml')
 export const walletPath = path.join(APP.getPath('home'), '.kepler', chainType)
 export const walletDataPath = path.join(APP.getPath('home'), '.kepler', chainType, 'wallet_data')
+export const walletConfigPath = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-wallet.toml')
 export const walletLogPath = path.join(APP.getPath('home'), '.kepler', chainType, 'kepler-wallet.log')
-export const apiSecretPath = path.join(APP.getPath('home'), '.kepler', chainType, '.api_secret')
+export const nodeApiSecretPath = getNodeApiSecret()
+export const ownerApiSecretPath = getOwnerApiSecret()
 export const kwPath = path.join(APP.getPath('home'), '.keplerwallet')
 export const logDir = path.join(kwPath, 'log')
 export const tempTxDir = path.join(kwPath, 'temp_tx')
@@ -93,16 +116,6 @@ export const hedwigClient =
 
 export const hedwigApp = 'Niffler'
 
-export const grinRsWallet =  
-  IS_PROD || APP.isPackaged
-    ? path.resolve(path.join(process.resourcesPath, 'bin', 'grinRs', 'wallet.js'))
-    : path.resolve(path.join(root, 'grinRs', 'wallet.js'))
-
-export const nodeExecutable =  
-    IS_PROD || APP.isPackaged
-      ? path.resolve(path.join(process.resourcesPath, 'bin', 'grinRs', 'node.exe'))
-      : path.resolve(path.join(root, 'grinRs', 'node.exe'))
-
 function getLocale(){
   let locale = getConfig()['locale']
   if(locale)return locale
@@ -115,8 +128,7 @@ export function setLocale(locale){
   updateConfig({'locale':locale})
 }
 export const locale = getLocale()
-export const langs = {'zh':'简体中文', 'en':'English', 'ru': 'русский'}
-
+export const langs = {'zh':'简体中文', 'en':'English'}
 
 import pkg from '../../package.json'
 export const version = pkg.version
@@ -124,11 +136,12 @@ export const version = pkg.version
 export const defaultGnodeOptions= {
   'useLocalGnode': true,
   //connnectMethod: localFirst, remoteFirst, localAllTime, remoteAllTime
-  'connectMethod':'remoteFirst',
+  'connectMethod':'localFirst',
   'remoteAddr': 'http://node.keplerwallet.org:7413',
   'localAddr': 'http://127.0.0.1:7413',
-  'background': true
+  'background': false
 }
+
 export const gnodeOption = getConfig()['gnode']?getConfig()['gnode']: defaultGnodeOptions
 
 export const keplerNode = gnodeOption.remoteAddr

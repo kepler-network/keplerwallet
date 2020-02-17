@@ -9,7 +9,7 @@
             <div v-if="page==='addSeeds'">
               <p class="animated bounce has-text-weight-semibold has-text-primary" 
                 style="animation-iteration-count:2;margin-bottom:12px">
-                {{ $t('msg.restore.addSeedsInfo') }} ({{seeds.length}}/{{total}})
+                {{ $t('msg.restore.addSeedsInfo') }} ({{seeds.length}}/(12 or 24))
               </p>
               <div class="field has-addons">
                 <div class="control">
@@ -96,7 +96,7 @@
                 style="animation-iteration-count:2;margin-bottom:40px">
                 {{ $t('msg.restore.restored') }}
             </p>
-            <a class="button is-info is-inverted is-outlined" @click="toLogin">{{ $t('msg.restore.login') }}</a>
+            <a class="button is-link is-inverted is-outlined" @click="quit">{{ $t('msg.restore.login') }}</a>
           </div>
           </div>
         </div>
@@ -106,8 +106,12 @@
 </template>
 
 <script>
+const {ipcRenderer} = require('electron')
+
 import { messageBus } from '@/messagebus'
 const { exec } = require('child_process')
+import walletServiceV3 from '../../shared/walletv3'
+import {chainType, keplerNode2, keplerLocalNode} from '../../shared/config'
 
 export default {
   name: "restore",
@@ -134,23 +138,42 @@ export default {
   created(){
     messageBus.$on('walletRecoverReturn', (ret)=>{
       if(ret === 'ok'){
+        let gnode = keplerNode2
+
         this.page = 'recovered'
-        this.$walletService.restore(this.password, this.updateOutput)
+        let localGnodeStatus = this.$dbService.getLocalGnodeStatus()
+        this.$log.debug('check kepler local status before restore balance: ' + localGnodeStatus)
+        if(localGnodeStatus == 'running'){
+          this.$log.debug('check use kepler local node')
+          gnode = keplerLocalNode
+        }
+        this.$walletService.info(this.updateOutput, gnode, this.password)
       }else if(ret === 'invalidSeeds'){
         this.page = 'recoverError'
         this.recoverErrorInfo = this.$t('msg.restore.invalid')
       }else{
         this.page = 'recoverError'
-        this.recoverErrorInfo = ret
+        this.recoverErrorInfo = this.$t('msg.restore.failed')
       }
     })
-    messageBus.$on('walletRestored', (ret)=>{
+    messageBus.$on('walletInfoFinished', (ret)=>{
       this.page = 'restored'
     })
+    messageBus.$on('walletInfoFailed', (ret)=>{
+      let gnode = keplerNode2
+      let localGnodeStatus = this.$dbService.getLocalGnodeStatus()
+      this.$log.debug('check kepler local nodes tatus before restore balance: ' + localGnodeStatus)
+      if(localGnodeStatus == 'running'){
+        this.$log.debug('kepler-wallet info use kepler local node')
+        gnode = keplerLocalNode
+      }
+      this.$log.debug('Try to kepler-wallet info again')
+      this.$walletService.info(this.updateOutput, gnode, this.password)
+    })  
   },
   watch: {
     seeds:function(newVal, oldVal){
-      if(newVal.length == this.total){
+      if(newVal.length == 24 || newVal.length == 12){
         this.enoughSeeds = true
       }else{
         this.enoughSeeds = false
@@ -182,7 +205,7 @@ export default {
       return re.test(seed)
     },
     add(){
-      if(this.enoughSeeds)return
+      if(this.seeds.length >=24 )return
       let seed = this.currentSeed.trim()
       if(seed === '' || !this.validSeed(seed) ){
         return this.currentSeedInvalid = true
@@ -207,7 +230,52 @@ export default {
         this.errorInfoPassword = this.$t('msg.create.errorPasswdConsistency')
         return
       }
-      this.$walletService.recover(this.seeds.join(' '), this.password)
+      const seeds_ = this.seeds.join(' ')
+      let len = 32
+      if(this.seeds.length==12){
+        len = 16
+      }
+      let chain
+      if(chainType==='main')chain='Mainnet'
+      if(this.$walletService.isWalletConfigExist()){
+        walletServiceV3.createWallet(null, seeds_, len, this.password).then(
+          (res)=>{
+            this.$log.debug('createWallet return: '+ JSON.stringify(res))
+            if(res.result.hasOwnProperty('Ok')){
+              if(this.$walletService.isExist()){
+                messageBus.$emit('walletRecoverReturn', 'ok')
+              }else{
+                messageBus.$emit('walletRecoverReturn', 'invalidSeeds')
+              }
+            }
+          }).catch((err)=>{
+            this.$log.error('createWallet failed: '+ err)
+            messageBus.$emit('walletRecoverReturn', 'failed')
+          })
+      }else{
+        walletServiceV3.createConfig(chain, null, null, null).then(
+          (res) =>{
+            this.$log.debug('createConfig return: '+ JSON.stringify(res))
+            if(res.result.hasOwnProperty('Ok')){
+              walletServiceV3.createWallet(null, seeds_, len, this.password).then(
+                (res)=>{
+                  this.$log.debug('createWallet return: '+ JSON.stringify(res))
+                  if(res.result.hasOwnProperty('Ok')){
+                    if(this.$walletService.isExist()){messageBus.$emit('walletRecoverReturn', 'ok')}
+                    else{
+                      messageBus.$emit('walletRecoverReturn', 'invalidSeeds')
+                    }
+                  }
+                }).catch((err)=>{
+                  this.$log.error('createWallet failed: '+ err)
+                  messageBus.$emit('walletRecoverReturn', 'failed')
+                })
+            }
+          }).catch((err)=>{
+            this.$log.error('createConfig failed: '+ err)
+            messageBus.$emit('walletRecoverReturn', 'failed')
+          })
+      }
     },
     delete_(){
       if(this.seeds.length>0)this.seeds.pop()
@@ -220,7 +288,10 @@ export default {
     toLogin(){
       this.clearup()
       messageBus.$emit('restoredThenLogin')
-    }
+    },
+    quit(){
+      ipcRenderer.send('quit')
+    },
   }
 }
 </script>
