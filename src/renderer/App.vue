@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="pageloader is-link" v-bind:class="{'is-active': isloading }"><span class="title">{{ $t("msg.loading") }}</span></div>
+    <div class="pageloader is-info" v-bind:class="{'is-active': isloading }"><span class="title">{{ $t("msg.loading") }}</span></div>
 
     <div class="section" v-if="ownerApiRunning">
       <div class="columns">
