@@ -12,8 +12,8 @@ let publicKey
 let sharedSecret //hex string
 let token
 
-const walletHost = 'http://localhost:3420'
-const jsonRPCUrl = 'http://localhost:3420/v3/owner'
+const walletHost = 'http://localhost:7420'
+const jsonRPCUrl = 'http://localhost:7420/v3/owner'
 
 function encrypt(key, text, nonce){
     //const nonce = new Buffer(crypto.randomBytes(12), 'utf8')
