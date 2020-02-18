@@ -146,7 +146,7 @@ export default {
           })
         }
       }
-      setTimeout(()=>selectGnode.call(this), 800)
+      setTimeout(()=>selectGnodeAndLogin.call(this), 800)
       this.resetErrors()
       },
     resetErrors(){

@@ -175,14 +175,24 @@ class WalletService {
         }, 500)
     }
     
-    static startListen(gnode, password=password_){
+    static startListen(gnode, password=password_, noTor=true){
         WalletService.stopProcess('listen')
         if(platform==='linux'){
-            listenProcess =  execFile(keplerWalletPath, ['-r', gnode, '-e', 'listen']) 
+            if(noTor){
+                listenProcess =  execFile(keplerWalletPath, ['-r', gnode, '-e', 'listen', '-n'])
+            }else{
+                listenProcess =  execFile(keplerWalletPath, ['-r', gnode, '-e', 'listen'])
+            }
         }else{
-            const cmd = platform==='win'? `${keplerWalletPath} -r ${gnode} -e --pass ${addQuotations(password)} listen`:
+            let cmd
+            if(noTor){
+                cmd = platform==='win'? `${keplerWalletPath} -r ${gnode} -e --pass ${addQuotations(password)} listen -n`:
+                                        `${keplerWalletPath} -r ${gnode} -e listen -n`
+            log.debug(`platform: ${platform}; start listen cmd: ${cmd}`)
+            }else{
+                cmd = platform==='win'? `${keplerWalletPath} -r ${gnode} -e --pass ${addQuotations(password)} listen`:
                                         `${keplerWalletPath} -r ${gnode} -e listen`
-            //log.debug(`platform: ${platform}; start listen cmd: ${cmd}`)
+            }
             listenProcess =  exec(cmd)
         }
         processes['listen'] = listenProcess
@@ -200,7 +210,6 @@ class WalletService {
             log.error('start wallet listen got stderr: ' + data)
         })
     }
-
     static stopAll(){
         for(var ps in processes){
             log.debug('stopall ps: '+ ps)

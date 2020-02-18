@@ -27,12 +27,10 @@ Vue.log = Vue.prototype.$log = log
 
 import en from '../lang/en'
 import zh from '../lang/zh'
-import ru from '../lang/ru'
 
 Vue.use(VueI18n)
 const messages = {
   en,
-  ru,
   zh,
 }
 
