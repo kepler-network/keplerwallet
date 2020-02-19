@@ -220,7 +220,7 @@
         this.current_txs = this.total_txs.slice(s, s+this.count_per_page)
       },
 
-      cancel(tx_salte_id){
+      cancel(tx_slate_id){
         this.$walletService.cancelTransactions(null, tx_slate_id)
           .then((res) => {
             if(res.data.result.Ok === null){
