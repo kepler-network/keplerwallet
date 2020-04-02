@@ -131,6 +131,8 @@ const messages = {
 
     httpSend:{
       sendAmount: 'Amount to send',
+      sendMessage: 'Message',
+      optional: 'optional',
       address:'Address',
       WrongAmount: 'Wrong amount',
       NotEnough: 'Not enough amount. Keep 0.01 as fee',

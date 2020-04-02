@@ -25,6 +25,13 @@
             <input class="input" type="text" v-model="amount" placeholder="1 Ҝ">
           </div>
         </div>
+        <div class="field">
+          <label class="label">{{ $t("msg.httpSend.sendMessage") }} ({{ $t('msg.httpSend.optional') }})</label>
+          <div class="control">
+            <input class="input" type="text" v-model="message">
+          </div>
+        </div>
+
         <br/>
         <div class="field is-grouped">
           <div class="control">
@@ -62,6 +69,7 @@ export default {
     return {
       errors: [],
       amount: null,
+      message: '',
       address: '',
       slateVersion: 0,
       sending: false,
@@ -131,7 +139,7 @@ export default {
           "max_outputs": 500,
           "num_change_outputs": 1,
           "selection_strategy_is_use_all": true,
-          "message": null,
+          "message": this.message,
           "target_slate_version": null,
           "payment_proof_recipient_address": null,
           "ttl_blocks": null,
